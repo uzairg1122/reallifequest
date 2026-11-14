@@ -1,0 +1,24 @@
+import {chromium} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+const browser=await chromium.launch({channel:'msedge',headless:true});
+const page=await browser.newPage({viewport:{width:390,height:844}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://localhost:5173');
+await page.getByRole('button',{name:'Get Started'}).click();await page.getByRole('button',{name:'Next',exact:true}).click();await page.getByRole('button',{name:"I'm a Parent"}).click();
+await page.getByLabel('Child’s hero name').fill('Leo');await page.getByLabel('Create a parent PIN').fill('1234');await page.getByLabel('Confirm PIN').fill('1234');
+await page.screenshot({path:'artifacts/04-setup.png'});await page.getByRole('button',{name:'Create Family'}).click();
+const snap=async(name)=>{await page.waitForTimeout(250);await page.screenshot({path:`artifacts/${name}.png`});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw new Error('Horizontal overflow '+name)};
+await page.getByRole('button',{name:'Routines',exact:true}).click();await snap('13-routines');
+await page.getByRole('button',{name:'Adventure Templates'}).click();await page.getByRole('button',{name:'The Reading Spell'}).click();await page.getByRole('button',{name:'Save',exact:true}).click();await page.getByRole('button',{name:/The Reading Spell/}).waitFor();
+await page.getByRole('button',{name:'Back',exact:true}).click();await page.getByRole('button',{name:'Schedule',exact:true}).click();await page.getByLabel('Curfew Time').fill('20:45');await page.getByRole('button',{name:'Save Changes'}).click();await snap('15-schedule');
+await page.getByRole('button',{name:'Notifications',exact:true}).click();await snap('16-notifications');
+await page.getByRole('button',{name:'More',exact:true}).click();await page.getByRole('button',{name:'Settings',exact:true}).click();await snap('17-settings');
+await page.getByRole('button',{name:'Switch to child'}).click();await page.getByRole('button',{name:"I'm a Kid"}).click();await snap('05-dashboard');
+await page.getByRole('button',{name:/Morning Routine/}).click();await page.getByRole('button',{name:'Start brushing'}).click();await page.waitForTimeout(1100);await page.getByRole('button',{name:'Pause',exact:true}).click();await snap('06-routine');
+await page.getByRole('button',{name:'Quests',exact:true}).click();await snap('07-quests');await page.getByRole('button',{name:/Make Your Bed/}).click();await page.getByRole('button',{name:'Add Photo Proof'}).click();await snap('08-photo');await page.getByRole('button',{name:'Skip for now'}).click();
+await page.getByRole('button',{name:'Bonus',exact:true}).click();await snap('09-bonus');await page.getByRole('button',{name:'Suggest a Deed'}).click();await page.getByLabel('Name',{exact:true}).fill('Water the plants');await page.getByRole('button',{name:'Send My Idea'}).click();await page.getByRole('button',{name:/Water the plants/}).waitFor();
+await page.getByRole('button',{name:'Vault',exact:true}).click();await snap('10-vault');
+await page.setViewportSize({width:320,height:640});await snap('small-mobile');await page.setViewportSize({width:1280,height:900});await snap('desktop');
+if(errors.length)throw new Error(errors.join('\n'));
+console.log('PASS: 17 main screen coverage, template creation, schedules, timer pause, suggestions, 320px and desktop layout, no page errors.');await browser.close();
+

@@ -1,0 +1,82 @@
+import { chromium, expect } from '@playwright/test';
+const browser = await chromium.launch({channel:'msedge',headless:true});
+try {
+ const page = await browser.newPage({viewport:{width:390,height:844}});
+ const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+ let payload; let fail=false;
+ await page.route('**/api/**', async route=>{
+  const path=new URL(route.request().url()).pathname;
+  let body={};
+  if(path.includes('/auth/')) body={token:'test',user:{id:'p1',displayName:'Ayesha',role:'parent'}};
+  if(path==='/api/family') body={family:{id:'f1',name:'Family'},members:[]};
+  if(path==='/api/submissions') body={submissions:[]};
+  if(path==='/api/notifications') body={notifications:[]};
+  if(path==='/api/families/pairing-code') {
+   payload=route.request().postDataJSON();
+   if(fail) return route.fulfill({status:503,json:{error:'Please try again shortly.'}});
+   body={code:'123456',inviteUrl:'/?invite=123456'};
+  }
+  await route.fulfill({json:body});
+ });
+ await page.goto('http://127.0.0.1:5173');
+ await page.getByRole('button',{name:'Get Started'}).click();
+ await page.getByRole('button',{name:'Next',exact:true}).click();
+ await page.getByRole('button',{name:"I'm a Parent"}).click();
+ await page.getByLabel('Email',{exact:true}).fill('parent@example.com');
+ await page.getByLabel('Password',{exact:true}).fill('test-password');
+ await page.getByLabel('Your name').fill('Ayesha');
+ await page.getByRole('button',{name:'Connect family'}).click();
+ await expect(page.getByRole('heading',{name:'Your family dashboard'})).toBeVisible();
+ await expect(page.getByText('No children have joined yet. Invite your kid above to get started.')).toBeVisible();
+ await page.screenshot({path:'artifacts/parent-dashboard-updated.png'});
+ await page.getByRole('button',{name:'Invite your kid',exact:true}).click();
+ await page.getByLabel('Child name',{exact:true}).fill('Ali');
+ await page.locator('select[name=childAge]').selectOption('9');
+ const first=page.locator('.invite-task-list input:checked').first();
+ const index=await first.evaluate(el=>Array.from(el.closest('.invite-task-list').querySelectorAll('input')).indexOf(el));
+ await first.uncheck();
+ await expect(page.getByRole('button',{name:/Create invite/})).toBeDisabled();
+ await page.locator('.invite-task-list input').nth(index).check();
+ await page.getByRole('button',{name:/Create invite/}).click();
+ await expect(page.getByText('123456',{exact:true})).toBeVisible();
+ await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.copied=text;}}}));
+ await page.getByRole('button',{name:'Copy Invite Link',exact:true}).click();
+ await expect(page.getByRole('status')).toContainText('Invite link copied!');
+ if(await page.evaluate(()=>window.copied)!=='http://127.0.0.1:5173/?invite=123456') throw Error('Wrong copied invite URL');
+ await page.evaluate(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('Denied');}}});document.execCommand=()=>false;});
+ await page.getByRole('button',{name:'Copy Invite Link',exact:true}).click();
+ await expect(page.getByRole('status')).toContainText('Copy is blocked.');
+ await expect(page.getByLabel('Invite link',{exact:true})).toHaveValue('http://127.0.0.1:5173/?invite=123456');
+ if(payload.childName!=='Ali'||payload.childAge!==9||payload.tasks.length!==5) throw Error('Incorrect invite payload');
+ await page.getByRole('button',{name:'Done',exact:true}).click();
+ await page.getByRole('button',{name:'My family',exact:true}).click();
+ await page.getByRole('button',{name:'Invite another child'}).click();
+ await expect(page.getByRole('heading',{name:'Invite your child'})).toBeVisible();
+ fail=true;
+ await page.getByLabel('Child name',{exact:true}).fill('Sara');
+ await page.getByRole('button',{name:/Create invite/}).click();
+ await expect(page.locator('.modal [role=alert]')).toHaveText('Please try again shortly.');
+ if(errors.length) throw Error(errors.join('\n'));
+ const child=await browser.newPage();
+ let join;
+ await child.route('**/api/**',async route=>{
+  const path=new URL(route.request().url()).pathname;
+  let body={};
+  if(path.endsWith('/register-child')){join=route.request().postDataJSON();body={token:'child-test',user:{id:'c1',displayName:'Imran',role:'child',age:14}};}
+  if(path==='/api/family') body={family:{id:'f1',name:'Family'},members:[{id:'c1',role:'child',display_name:'Imran',coins:0,xp:0,level:1,stars:0}]};
+  if(path==='/api/tasks') body={tasks:[]};
+  if(path==='/api/notifications') body={notifications:[]};
+  await route.fulfill({json:body});
+ });
+ await child.goto('http://127.0.0.1:5173/?invite=123456');
+ await expect(child.getByLabel('Family pairing code')).toHaveValue('123456');
+ await child.getByLabel('Your name').fill('Imran');
+ await child.getByLabel('Child PIN').fill('1234');
+ await child.locator('select[name=age]').selectOption('14');
+ await child.getByRole('button',{name:'Join family',exact:true}).click();
+ await expect(child.getByRole('button',{name:'Home',exact:true})).toBeVisible();
+ if(join.code!=='123456'||join.age!==14||join.displayName!=='Imran'||'email' in join||'password' in join) throw Error('Invalid child join payload');
+ await child.reload();
+ await expect(child.getByRole('button',{name:'Home',exact:true})).toBeVisible();
+ console.log('PASS: parent routing, distinct dashboard, invite payload, five-task minimum, second invite and inline errors');
+} finally { await browser.close(); }

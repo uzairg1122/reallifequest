@@ -1,0 +1,7 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {pinHash,pinMatches,mission,award,day,week,safeNickname,alias,eligible} from '../src/domain.js';
+test('salted child PIN verification, malformed and wrong PIN denied',()=>{const one=pinHash('2468'),two=pinHash('2468');assert.notEqual(one,two);assert(pinMatches('2468',one));assert(!pinMatches('1111',one));assert(!pinMatches('2468','corrupt'));assert.throws(()=>pinHash('12'));});
+test('approval XP is standardized and capped across tasks',()=>{const task=mission({title:'Help',difficulty:'hard',xp:999,coins:20});assert.equal(task.xp,50);const grant=award(task,{xpDay:day(),xpToday:280});assert.equal(grant.xp,20);assert(grant.flagged);assert.equal(award(task,{xpDay:'2000-01-01',xpToday:300}).xp,50);});
+test('safe public name never falls back to real child name',()=>{const child={id:'secret-child',display_name:'Full Real Name'};assert(!alias(child).includes('Full'));assert.throws(()=>safeNickname('5551234'));assert.throws(()=>safeNickname('f u c k'));assert.equal(safeNickname('Brave Tiger'),'Brave Tiger');assert(!eligible(child));assert(eligible({...child,consent_at:day(),league_opt_in:true}));assert(!eligible({...child,consent_at:day(),league_opt_in:true,league_suspended:true}));});
+test('ISO week uses UTC year boundary',()=>{assert.equal(week(new Date('2021-01-01T12:00:00Z')),'2020-W53');assert.equal(week(new Date('2026-11-08T00:00:00Z')),'2026-W45');});

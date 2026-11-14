@@ -1,0 +1,10 @@
+import {mkdir,readFile,writeFile,copyFile,readdir} from 'node:fs/promises';
+const out='firebase-hosting';await mkdir(out+'/real-life-quest',{recursive:true});
+for(const file of await readdir('public/real-life-quest'))await copyFile('public/real-life-quest/'+file,out+'/real-life-quest/'+file);
+// Firebase Authentication sends its own password-reset emails and action handler.
+// Never ship the legacy PHP reset form as the Firebase password action page.
+await writeFile(out+'/real-life-quest/reset-password.html','<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Password help — Real Life Quest</title><link rel="stylesheet" href="site.css"><main><h1>Password help</h1><p>Use Forgot password in the app. Firebase Authentication will email a secure reset link. Open the exact link in that email; this page does not accept passwords.</p><a href="mailto:support@nomolabs.pro">Contact support</a></main>');
+await writeFile(out+'/real-life-quest/reset.js','// Firebase Authentication uses its hosted password action handler.');
+let policy=await readFile(out+'/real-life-quest/privacy.html','utf8');policy=policy.replace('Our hosting service processes the app database and uploaded content on our behalf.','Google Firebase processes authentication, the Firestore database, Cloud Storage photos and Cloud Functions on our behalf. Firebase Authentication manages parent email/password credentials. Private child PIN hashes are stored in the server-only database.');policy=policy.replace('Public boards may show an approved nickname, avatar and ranking.','Public boards show a non-identifying nickname and ranking; profile photos remain within the family.');await writeFile(out+'/real-life-quest/privacy.html',policy);
+await writeFile(out+'/index.html','<!doctype html><meta http-equiv="refresh" content="0;url=/real-life-quest/"><a href="/real-life-quest/">Real Life Quest</a>');
+console.log('Firebase Hosting pages prepared; no deployment performed.');

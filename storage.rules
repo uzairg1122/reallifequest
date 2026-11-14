@@ -1,0 +1,7 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // No public download tokens/URLs. Authorized function streams family photos.
+    match /{object=**} { allow read, write: if false; }
+  }
+}

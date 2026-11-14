@@ -1,0 +1,46 @@
+{
+  "name": "real-life-quest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "build:release": "tsc -b && vite build --mode release",
+    "dev:firebase": "vite --mode firebase --host 0.0.0.0",
+    "build:firebase": "tsc -b && vite build --mode firebase",
+    "firebase:hosting": "node scripts/prepare-firebase-hosting.mjs",
+    "firebase:check": "npm run check --prefix functions && node --test functions/test/domain.node.mjs functions/test/service.node.mjs",
+    "firebase:test": "npx --yes firebase-tools emulators:exec --only auth,firestore,storage --project demo-rlq \"node --test functions/test/emulator.node.mjs\"",
+    "dev:hostinger": "vite --mode hostinger --host 0.0.0.0",
+    "build:hostinger": "tsc -b && vite build --mode hostinger"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.3",
+    "@capacitor/camera": "8.0.2",
+    "@capacitor/core": "^8.4.3",
+    "@fontsource/nunito-sans": "^5.3.0",
+    "@fontsource/quicksand": "^5.3.0",
+    "firebase": "^13.2.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.3",
+    "@playwright/test": "^1.51.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.0"
+  }
+}

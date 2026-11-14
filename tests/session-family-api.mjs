@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+const fixture=(...args)=>JSON.parse(execFileSync('.test-runtime/php/php.exe',['-n','-d','extension_dir=.test-runtime/php/ext','-d','extension=pdo_mysql','tests/session-fixture.php',...args],{encoding:'utf8'})||'null');
+fixture('migrate');
+const base='http://127.0.0.1:8091/api';
+async function call(path,token,body,status=200,method=body?'POST':'GET'){const r=await fetch(base+path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:body?JSON.stringify(body):undefined});const data=await r.json();assert.equal(r.status,status,`${path}: ${JSON.stringify(data)}`);return data;}
+const stamp=Date.now(),password='Only-fixture-password-123',task={title:'Saved mission',description:'History must stay',coins:10,xp:10};
+async function family(n){const parent=await call('/auth/register',null,{email:`session-${n}-${stamp}@example.test`,password,displayName:`Parent ${n}`},201);const invite=await call('/families/pairing-code',parent.token,{childName:'Umar',childAge:8,tasks:[task]});const child=await call('/auth/register-child',null,{displayName:'Umar',age:8,code:invite.code,pin:'2468'},201);return{parent,child};}
+const a=await family('a'),b=await family('b');
+assert.notEqual(a.child.user.id,b.child.user.id);assert.notEqual(a.child.familyId,b.child.familyId);
+await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',parentEmail:`session-a-${stamp}@example.test`,childId:a.child.user.id},422);
+const loginA=await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceToken:a.child.childDeviceToken,childId:b.child.user.id});assert.equal(loginA.user.id,a.child.user.id);
+const loginB=await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceToken:b.child.childDeviceToken});assert.equal(loginB.user.id,b.child.user.id);
+const before=await call('/tasks',a.child.token);assert.equal(before.tasks.length,1);
+await call('/families/child-device-code',b.parent.token,{childId:a.child.user.id},404);
+const code=await call('/families/child-device-code',a.parent.token,{childId:a.child.user.id});
+await call('/auth/child-login',null,{displayName:'Umar',pin:'9999',deviceCode:code.code},401);
+const connected=await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceCode:code.code});assert.equal(connected.user.id,a.child.user.id);
+await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceCode:code.code},401);
+fixture('near-expiry',a.parent.token);assert(fixture('inspect',a.parent.token).seconds<2*86400);await call('/family',a.parent.token);assert(fixture('inspect',a.parent.token).seconds>29*86400);
+await call('/auth/logout',loginA.token,{});await call('/family',loginA.token,null,401);await call('/family',a.child.token);
+fixture('expire',loginB.token);await call('/family',loginB.token,null,401);assert(fixture('inspect',loginB.token).seconds<0);
+for(let i=0;i<5;i++)await call('/auth/child-login',null,{displayName:`Wrong ${i}`,pin:'0000',deviceToken:connected.childDeviceToken},401);
+await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceToken:connected.childDeviceToken},429);
+const unusedCode=await call('/families/child-device-code',a.parent.token,{childId:a.child.user.id});
+await call('/family/child-pin',a.parent.token,{childId:a.child.user.id,pin:'8642'},200,'PATCH');
+await call('/family',a.child.token,null,401);
+await call('/family',connected.token,null,401);
+await call('/auth/child-login',null,{displayName:'Umar',pin:'8642',deviceCode:unusedCode.code},401);
+await call('/auth/child-login',null,{displayName:'Umar',pin:'2468',deviceToken:connected.childDeviceToken},401);
+const reconnected=await call('/auth/child-login',null,{displayName:'Umar',pin:'8642',deviceToken:connected.childDeviceToken});
+assert.equal(reconnected.user.id,a.child.user.id);
+assert.deepEqual((await call('/tasks',reconnected.token)).tasks.map(t=>t.id),before.tasks.map(t=>t.id));
+await call('/auth/logout',a.parent.token,{});await call('/family',a.parent.token,null,401);await call('/family',b.parent.token);
+console.log('PASS family isolation, one-use pairing, session expiry, PIN throttling, and PIN reset with saved phone binding and preserved history.');

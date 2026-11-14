@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS family_trial_devices (
+    device_hash CHAR(64) PRIMARY KEY,
+    family_id CHAR(36) NOT NULL,
+    claimed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

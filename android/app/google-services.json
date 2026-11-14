@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "771794282164",
+    "project_id": "real-life-quest-792fa",
+    "storage_bucket": "real-life-quest-792fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771794282164:android:e9cb3c691a067d2f38d9e1",
+        "android_client_info": {
+          "package_name": "com.reallifequest.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABnHwQgCBg1z7DrnrcVVWn-ylvDs_acg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

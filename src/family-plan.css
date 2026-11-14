@@ -1,0 +1,26 @@
+.family-plan-screen {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem 1.5rem;
+}
+.family-plan-actions {
+  display: grid;
+  gap: .75rem;
+}
+.family-plan-actions a { padding-block: .5rem; }
+.family-weekly-report summary {
+  cursor: pointer;
+  font-weight: 750;
+}
+.family-weekly-report label { margin-top: .75rem; }
+.family-weekly-report ul { list-style: none; padding: 0; }
+.family-weekly-report li, .family-schedule-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .75rem 0;
+  border-bottom: 1px solid #dce8f2;
+}

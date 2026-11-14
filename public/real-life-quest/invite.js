@@ -1,0 +1,2 @@
+const params=new URLSearchParams(location.search);const code=params.get('invite')||params.get('coparent');
+if(code&&/^\d{6}$/.test(code)){document.getElementById('invite').hidden=false;document.getElementById('code').textContent=code;document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(code);document.getElementById('status').textContent='Code copied.'}catch{document.getElementById('status').textContent='Select the code above and copy it.'}};}

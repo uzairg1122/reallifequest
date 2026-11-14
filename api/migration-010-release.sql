@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS reauth_grants (
+ token_hash CHAR(64) PRIMARY KEY, user_id CHAR(36) NOT NULL, session_hash CHAR(64) NOT NULL,
+ expires_at DATETIME NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS password_resets (
+ token_hash CHAR(64) PRIMARY KEY, user_id CHAR(36) NOT NULL, expires_at DATETIME NOT NULL,
+ FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET @rlq_release_sql = IF(EXISTS(SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='users' AND COLUMN_NAME='league_suspended'),'SELECT 1','ALTER TABLE users ADD COLUMN league_suspended TINYINT NOT NULL DEFAULT 0');
+PREPARE rlq_release_stmt FROM @rlq_release_sql; EXECUTE rlq_release_stmt; DEALLOCATE PREPARE rlq_release_stmt;
+CREATE TABLE IF NOT EXISTS moderation_actions (
+ id CHAR(36) PRIMARY KEY,report_id CHAR(36) NOT NULL,moderator_id CHAR(36) NULL,action VARCHAR(40) NOT NULL,created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY(report_id) REFERENCES safety_reports(id) ON DELETE CASCADE,FOREIGN KEY(moderator_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

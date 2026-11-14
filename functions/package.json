@@ -1,0 +1,19 @@
+{
+  "name": "real-life-quest-firebase",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test test/*.node.mjs",
+    "check": "node --check src/index.js && node --check src/service.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "firebase-admin": "^14.5.0",
+    "firebase-functions": "^7.4.0",
+    "sharp": "^0.35.5"
+  }
+}

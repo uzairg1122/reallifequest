@@ -1,0 +1,20 @@
+import AppErrorBoundary from './AppErrorBoundary';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import App from './App';
+import {restoreCredentials} from './sessionStorage';
+import './styles.css';
+import './family-polish.css';
+import './reference-ui.css';
+import './kids-playful.css';
+import './kids-feedback.css';
+import './parent-dashboard.css';
+import './kid-redesign.css';
+const root=createRoot(document.getElementById('root')!);
+root.render(<main className="login-screen"><p role="status">Opening your family…</p></main>);
+void restoreCredentials().then(()=>root.render(<React.StrictMode><AppErrorBoundary><App/></AppErrorBoundary></React.StrictMode>)).catch(()=>root.render(<main className="login-screen"><h1>Could not unlock saved sign-in</h1><p>Your family data has not been deleted. Please retry.</p><button className="button" onClick={()=>location.reload()}>Try again</button></main>));
+
+import '@fontsource/quicksand/latin-700.css';
+import '@fontsource/nunito-sans/latin-400.css';
+import '@fontsource/nunito-sans/latin-600.css';
+import '@fontsource/nunito-sans/latin-800.css';

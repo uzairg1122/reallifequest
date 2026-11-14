@@ -1,0 +1,77 @@
+/* Spec section 10 surfaces: the parent's privacy and safety card, the locked demo mode,
+   and the reaction / report controls on the public league board. */
+
+.safety-card{margin-top:18px;padding:18px 16px 20px}
+.safety-card>h3{display:flex;align-items:center;gap:9px;font-size:15px;margin-bottom:8px}
+.safety-card>h3 svg{width:19px;color:#4e86c9}
+.safety-lede{font-size:11.5px;line-height:1.65;color:#54719c;margin-bottom:14px}
+.safety-hint{font-size:10.5px;line-height:1.6;color:#6a82a4;margin:6px 0 12px}
+.safety-note{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#1c7a4d;background:#e8f8f0;border:1px solid #b8e6ce;border-radius:12px;padding:9px 11px;margin-bottom:12px}
+.safety-note svg{flex:none;width:15px;height:15px}
+
+.safety-child{border:1px solid #e3edf9;border-radius:16px;padding:13px 12px;margin-bottom:14px;background:#fbfdff}
+.safety-child-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.safety-child-head>div{display:flex;flex-direction:column;flex:1;min-width:0}
+.safety-child-head strong{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.safety-child-head small{font-size:10.5px;color:#6a82a4}
+.child-badge.is-on{background:#e8f8f0;color:#1c7a4d;border-color:#b8e6ce}
+.safety-scope-list{background:#f4f8fd;border-radius:12px;padding:2px 11px;margin-bottom:6px}
+.safety-scope-list .setting-row{min-height:auto;padding:8px 0;border-bottom:1px solid #e6eefa;font-size:11px;line-height:1.5;color:#54719c}
+.safety-scope-list .setting-row:last-child{border-bottom:0}
+.safety-nickname{display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:#54719c;margin:6px 0 9px}
+.safety-nickname input{border:1px solid #d7e5f6;border-radius:12px;padding:10px 12px;font-size:13px;font-family:inherit;color:#16324f;background:white;min-width:0}
+.safety-nickname input:focus{outline:2px solid #0085ff;outline-offset:1px}
+.safety-button{width:100%;margin-bottom:6px}
+.safety-erase-link{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:#bb5039;background:none;border:0;padding:6px 0;cursor:pointer;text-decoration:underline}
+.safety-audit{margin-top:12px;font-size:11px;color:#54719c}
+.safety-audit summary{cursor:pointer;font-weight:600;padding:6px 0}
+.safety-audit p{margin:4px 0;line-height:1.5}
+.safety-divider{height:1px;background:#e9f1fb;margin:20px 0 16px}
+.safety-danger-box{border:1.5px solid #f2c4b8;background:#fff6f3;border-radius:14px;padding:13px 12px;margin:10px 0}
+.safety-danger-box h4{display:flex;align-items:center;gap:7px;font-size:13px;color:#a83f28;margin-bottom:6px}
+.safety-danger-box h4 svg{width:16px}
+.safety-danger-box p{font-size:11px;line-height:1.6;color:#7a4a3c;margin-bottom:10px}
+.safety-danger-box label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#7a4a3c;margin-bottom:9px}
+.safety-danger-box input{border:1px solid #ecc7bd;border-radius:11px;padding:9px 11px;font-size:13px;font-family:inherit;background:white;min-width:0}
+.safety-danger-actions{display:flex;gap:8px}
+.safety-danger-actions .button{flex:1;margin:0}
+.safety-danger-actions .button:not(.secondary){background:#c0472c}
+
+/* Locked demo mode. Sits above every child screen so the preview can never be mistaken
+   for a real, saved adventure. */
+.demo-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:linear-gradient(135deg,#fff4d6,#ffe9c2);border:1.5px solid #f0c674;border-radius:14px;padding:9px 11px;margin-bottom:14px}
+.demo-tag{font-size:9.5px;font-weight:800;letter-spacing:.09em;background:#a86a12;color:white;border-radius:99px;padding:3px 8px;flex:none}
+.demo-bar p{flex:1;min-width:140px;font-size:10.5px;line-height:1.55;color:#7a5410;margin:0}
+.demo-bar button{background:#a86a12;color:white;border:0;border-radius:99px;padding:7px 12px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap}
+.demo-bar button:focus-visible{outline:2px solid #7a4a05;outline-offset:2px}
+.demo-entry{color:#4e86c9}
+.demo-board{margin-bottom:16px}
+.demo-board .section-heading small{font-size:10.5px;color:#6a82a4}
+.demo-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #eef4fc;font-size:12.5px}
+.demo-row:last-child{border-bottom:0}
+.demo-row.is-me{background:#eaf4ff;border-radius:12px;padding-left:8px;padding-right:8px}
+.demo-rank{width:22px;text-align:center;font-weight:700;color:#6a82a4;font-size:12px;flex:none}
+.demo-avatar{font-size:19px;flex:none}
+.demo-row strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.demo-xp{font-size:11.5px;color:#54719c;flex:none}
+
+/* Public league: opt-out notice, preset reactions, report sheet. */
+.league-opted-out{display:flex;align-items:flex-start;gap:11px;background:#f4f8fd;border:1px dashed #c9dcf3;border-radius:14px;padding:13px 12px}
+.league-opted-out>span{font-size:18px;flex:none}
+.league-opted-out>div{flex:1;min-width:0}
+.league-opted-out strong{font-size:12.5px;display:block}
+.league-opted-out p{font-size:10.5px;line-height:1.6;color:#54719c;margin:4px 0 0}
+.league-opted-out .text-button{margin-top:6px;justify-content:flex-start;gap:5px}
+.league-name{flex:1;min-width:0}
+.league-reactions{display:flex;align-items:center;gap:4px;margin-top:5px;flex-wrap:wrap}
+.league-reactions button{min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;background:#f1f6fc;border:1px solid #dbe8f7;border-radius:99px;font-size:13px;line-height:1;padding:0 6px;cursor:pointer}
+.league-reactions button:hover{background:#e4effc}
+.league-reactions button:focus-visible{outline:2px solid #0085ff;outline-offset:1px}
+.league-reactions button:disabled{opacity:.5;cursor:default}
+.league-report{margin-bottom:14px}
+.league-report h3{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-bottom:4px}
+.league-report-reasons{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.league-report-reasons button{background:#f1f6fc;border:1px solid #dbe8f7;border-radius:99px;padding:6px 11px;font-size:11px;font-family:inherit;color:#3d628f;cursor:pointer}
+.league-report-reasons button.active{background:#0085ff;border-color:#0085ff;color:white}
+.league-report-actions{display:flex;align-items:center;gap:10px}
+.league-report-actions .button{margin:0}

@@ -1,0 +1,146 @@
+CREATE TABLE users (
+  id CHAR(36) PRIMARY KEY,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  display_name VARCHAR(80) NOT NULL,
+  role ENUM('parent','child') NOT NULL,
+  child_pin_hash VARCHAR(255) NULL,
+  age TINYINT UNSIGNED NULL,
+  avatar_data MEDIUMTEXT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE sessions (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  token_hash CHAR(64) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX (expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE families (
+  id CHAR(36) PRIMARY KEY,
+  parent_id CHAR(36) NOT NULL,
+  schedule_json TEXT NULL,
+  name VARCHAR(120) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE family_members (
+  family_id CHAR(36) NOT NULL,
+  user_id CHAR(36) NOT NULL,
+  role ENUM('parent','child') NOT NULL,
+  joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (family_id, user_id),
+  FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE pairing_codes (
+  id CHAR(36) PRIMARY KEY,
+  family_id CHAR(36) NOT NULL,
+  code_hash CHAR(64) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used_at DATETIME NULL,
+  child_name VARCHAR(80) NULL,
+  child_age TINYINT UNSIGNED NULL,
+  task_payload LONGTEXT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE,
+  INDEX (expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE tasks (
+  id CHAR(36) PRIMARY KEY,
+  family_id CHAR(36) NOT NULL,
+  created_by CHAR(36) NOT NULL,
+  assigned_to CHAR(36) NOT NULL,
+  title VARCHAR(160) NOT NULL,
+  mission_title VARCHAR(160) NOT NULL,
+  description TEXT NOT NULL,
+  coins INT UNSIGNED NOT NULL DEFAULT 0,
+  xp INT UNSIGNED NOT NULL DEFAULT 0,
+  status ENUM('active','submitted','approved','rejected') NOT NULL DEFAULT 'active',
+  category VARCHAR(60) NOT NULL DEFAULT 'Custom Missions',
+  icon VARCHAR(32) NOT NULL DEFAULT '⚔️',
+  days VARCHAR(16) NOT NULL DEFAULT 'both',
+  photo_required TINYINT NOT NULL DEFAULT 0,
+  photo_mode VARCHAR(20) NULL,
+  due_date DATE NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id),
+  FOREIGN KEY (assigned_to) REFERENCES users(id),
+  INDEX (family_id, assigned_to, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE submissions (
+  id CHAR(36) PRIMARY KEY,
+  task_id CHAR(36) NOT NULL,
+  child_id CHAR(36) NOT NULL,
+  note TEXT NULL,
+  proof_url MEDIUMTEXT NULL,
+  proof_before_url MEDIUMTEXT NULL,
+  status ENUM('submitted','approved','rejected') NOT NULL DEFAULT 'submitted',
+  parent_feedback VARCHAR(500) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME NULL,
+  FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+  FOREIGN KEY (child_id) REFERENCES users(id),
+  INDEX (task_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE child_wallets (
+  child_id CHAR(36) PRIMARY KEY,
+  coins INT UNSIGNED NOT NULL DEFAULT 0,
+  xp INT UNSIGNED NOT NULL DEFAULT 0,
+  level INT UNSIGNED NOT NULL DEFAULT 1,
+  stars INT UNSIGNED NOT NULL DEFAULT 0,
+  FOREIGN KEY (child_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rewards (
+  id CHAR(36) PRIMARY KEY,
+  family_id CHAR(36) NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  description TEXT NULL,
+  cost_coins INT UNSIGNED NOT NULL DEFAULT 0,
+  cost_stars INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE notifications (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  type VARCHAR(60) NOT NULL,
+  title VARCHAR(160) NOT NULL,
+  body VARCHAR(500) NOT NULL,
+  read_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX (user_id, read_at, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS reward_requests (
+ id CHAR(36) PRIMARY KEY,
+ family_id CHAR(36) NOT NULL,
+ reward_id CHAR(36) NOT NULL,
+ child_id CHAR(36) NOT NULL,
+ name VARCHAR(160) NOT NULL,
+ cost_coins INT UNSIGNED NOT NULL,
+ status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE,
+ FOREIGN KEY (reward_id) REFERENCES rewards(id) ON DELETE CASCADE,
+ FOREIGN KEY (child_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS child_login_limits (
+ attempt_key CHAR(64) PRIMARY KEY,
+ attempts INT NOT NULL DEFAULT 1,
+ window_start DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

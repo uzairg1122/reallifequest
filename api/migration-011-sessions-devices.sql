@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS child_devices (
+ token_hash CHAR(64) PRIMARY KEY,
+ child_id CHAR(36) NOT NULL,
+ family_id CHAR(36) NOT NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ expires_at DATETIME NOT NULL,
+ INDEX(expires_at),
+ FOREIGN KEY(child_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY(family_id) REFERENCES families(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS child_device_invites (
+ code_hash CHAR(64) PRIMARY KEY,
+ child_id CHAR(36) NOT NULL,
+ family_id CHAR(36) NOT NULL,
+ expires_at DATETIME NOT NULL,
+ used_at DATETIME NULL,
+ INDEX(expires_at),
+ FOREIGN KEY(child_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY(family_id) REFERENCES families(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

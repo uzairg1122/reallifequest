@@ -1,0 +1,22 @@
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+<FilesMatch "\.(sql|log|ini|env|bak)$">
+    Require all denied
+</FilesMatch>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Every PHP file in this directory is either the front controller or a file index.php
+# includes. Requesting an include directly would execute it outside the router, so deny
+# every .php file and re-allow only the front controller. The earlier name-by-name list
+# missed leaderboard/challenge/league/coparent/share/safety routes, which would have
+# exposed them. Deny-all is also the safe default for any route file added later.
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
+
+<Files "index.php">
+    Require all granted
+</Files>

@@ -1,0 +1,38 @@
+/* Online screens only: onboarding artwork intentionally retains its existing styles. */
+.phone-shell input[hidden]{display:none!important}
+.kid-mode .app-header,.parent-mode .app-header{overflow:hidden}
+.kid-mode .content,.parent-mode .content{overflow-x:hidden}
+.kid-mode .content{background:linear-gradient(160deg,#f2fbff,#f7f8ff);padding:20px 18px 28px}.parent-mode .content{background:#f6f5fc}
+.parent-mode .app-header,.parent-mode .status-bar{background:linear-gradient(110deg,#453183,#7656c9)}.parent-mode .bottom-nav button.active{color:#6942b4;background:#f1edff}.parent-mode .content h1,.parent-mode .content h2{color:#33215c}
+.kid-mode .quest-row,.parent-mode .card{border-radius:20px}.kid-mode .quest-row{padding:15px 12px;min-height:94px;margin-bottom:9px;border-color:#c7e3ff;box-shadow:0 3px 0 #ddecff}.kid-mode .quest-row strong{font-size:14px;line-height:1.4}.kid-mode .quest-row .tile-icon{font-size:30px;background:#eaf6ff;border-radius:16px}.kid-mode .quest-row small{font-size:11px;line-height:1.5}.kid-mode .quest-row.completed{border-color:#a0e7b2;background:#f2fff3}.kid-mode .quest-row.waiting{border-color:#ffdc86;background:#fffcf0}
+.kid-greeting h1{font-size:26px;line-height:1.25;margin:8px 0}.kid-greeting>p{color:#65809e;font-size:13px;line-height:1.65}.kid-progress{display:flex;gap:14px;align-items:center;background:linear-gradient(120deg,#fffce5,#ffefb0);border:1px solid #f6d982;border-radius:21px;padding:18px 15px;margin:20px 0}.kid-progress>span{font-size:39px}.kid-progress>div{flex:1}.kid-progress strong{font-size:13px}.kid-progress .progress{margin:10px 0}.kid-progress small{font-size:10px;color:#8d692d}
+.kid-home .routine-grid{gap:12px}.kid-home .routine-card{min-height:136px;padding:17px 14px}.kid-home .routine-card h3{font-size:13px;line-height:1.4}.kid-home .routine-card>span{font-size:35px}.kid-next{display:flex;flex-wrap:wrap;align-items:center;gap:13px;padding:20px;border:1px solid #d7d9ff;border-radius:23px;background:linear-gradient(130deg,#eceaff,#e9faff);margin-top:22px}.kid-next>span{font-size:39px}.kid-next>div{flex:1}.kid-next h2{font-size:17px}.kid-next p{font-size:12px;color:#687b9e;line-height:1.6;margin:6px 0 0}.kid-next .button{margin-top:7px}
+.photo-avatar{background:#e4f4ff;overflow:hidden}.photo-avatar img{height:100%;width:100%;object-fit:cover}.profile-picture-preview{width:120px;height:120px;border-radius:50%;border:5px solid white;box-shadow:0 0 0 2px #a9d8ff;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#e1f3ff;margin:24px auto}.profile-picture-preview img{width:100%;height:100%;object-fit:cover}.profile-picture-preview>span{font-size:65px}.child-profile>p{font-size:13px;color:#6d84a1;line-height:1.6}.photo-picker input{font-size:12px;padding:11px}.child-profile .button{margin-top:15px}
+.member-heading{display:flex;align-items:center;gap:12px}.member-heading img,.member-heading>span{width:50px;height:50px;border-radius:16px;object-fit:cover;background:#ece8ff;display:grid;place-items:center;font-size:31px}.member-heading small{display:block;font-size:11px;font-weight:400;color:#7a7390;margin-top:5px}.family-management-row{padding:18px 0}.family-management-row>div:last-child{gap:6px;justify-content:space-between;margin-top:10px}.family-management-row .text-button{font-size:11px;padding:8px 5px}
+.assigned-history{margin-top:25px;border-top:1px solid #e5e3f1;padding-top:20px}.assigned-history h3{font-size:16px;margin-bottom:12px}.assigned-mission{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid #e8ecf4}.assigned-mission>span:first-child{font-size:23px}.assigned-mission>div{flex:1;min-width:0}.assigned-mission strong{font-size:12px;display:block;overflow-wrap:anywhere}.assigned-mission small{font-size:10px;color:#7f83a1;display:block;line-height:1.5;margin-top:4px}.task-status{font-size:9px!important;background:#edf3ff;color:#4f6b9e;padding:5px 7px;border-radius:20px}.parent-task-board>p{margin:8px 0 18px}.parent-task-board .invite-task-list{max-height:300px}.parent-task-board .checkbox-label{font-size:12px;padding:12px 0}.parent-task-board .checkbox-label small{display:block;font-size:10px;color:#7583a1;margin-top:4px}
+.child-celebration{z-index:24;align-items:center}.child-celebration .success-wrap{min-height:0;background:radial-gradient(circle at 50% 35%,white,#fff3c4 75%,#ffe595);padding:25px 20px}.child-celebration .success-stars{margin-bottom:16px}.child-celebration .success-reward{width:115px;height:115px;font-size:64px;margin:22px auto}.child-celebration .success-wrap h1{color:#a36300}
+.account-polished .account-symbol{font-size:56px;margin:16px 0 12px}.account-polished>.eyebrow{font-size:10px;letter-spacing:1.3px;color:#5884b5}.account-polished>h1{font-size:26px;margin-top:10px}.account-polished .login-form{padding:20px;background:#ffffffbd;border:1px solid #d6e8fc;border-radius:24px;box-shadow:0 8px 28px #426fa510}.parent-account-screen{background:radial-gradient(ellipse at top,#e5daff,#f7f5ff 65%)}.kid-account-screen{background:radial-gradient(ellipse at top,#d6f5ff,#f4fbff 65%)}
+.online-rewards .card{margin-top:20px}.online-rewards .reward-list{margin-top:20px}.online-rewards label:first-of-type{margin-top:16px}.parent-mode .review-card{padding:18px}.parent-mode .proof-thumb{width:110px;height:100px}.parent-mode .review-buttons button{font-size:12px;padding:9px 13px}.parent-mode .review-title h3{font-size:15px}.parent-mode .review-title small{font-size:11px;line-height:1.5}.parent-mode .review-title .coin-text{white-space:nowrap}.kid-mode .photo-preview{height:260px}.kid-mode .screen-photo .button{margin-bottom:13px}
+@media(max-width:355px){.kid-mode .content,.parent-mode .content{padding-left:12px;padding-right:12px}.account-polished .login-form{padding:15px}.kid-greeting h1{font-size:23px}.family-management-row .text-button{font-size:10px}.parent-mode .review-bottom{flex-wrap:wrap}.parent-mode .review-buttons{min-width:100%}}
+.kid-account-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0 0;
+}
+.kid-account-actions button {
+  min-height: 46px;
+  padding: 8px;
+  border: 1px solid #bed9f6;
+  border-radius: 14px;
+  background: #fff;
+  color: #173d70;
+  font-weight: 800;
+}
+.kid-account-actions button[aria-pressed="true"] {
+  background: #086bc8;
+  border-color: #086bc8;
+  color: #fff;
+}
+.kid-account-screen .login-form { margin-top: 12px; }
+.kid-connect-toggle { display: block; margin: 10px auto 0; }

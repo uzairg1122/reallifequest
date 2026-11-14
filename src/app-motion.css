@@ -1,0 +1,23 @@
+/* Keep movement short and limited to opacity/transform on mobile GPUs. */
+.phone-shell>.role-screen,.phone-shell>.login-screen{animation:screen-arrive 220ms cubic-bezier(.2,.75,.25,1) both}
+@keyframes screen-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.phone-shell .modal-backdrop:not(.loot-backdrop){animation:dialog-shade-in 180ms ease-out both}
+.phone-shell .modal-backdrop:not(.loot-backdrop)>.modal{animation:dialog-arrive 220ms cubic-bezier(.2,.75,.25,1) both;transform-origin:50% 100%}
+.phone-shell .modal-backdrop.is-exiting{animation:dialog-shade-out 140ms ease-in both;pointer-events:none}
+.phone-shell .modal-backdrop.is-exiting>.modal{animation:dialog-depart 140ms ease-in both;pointer-events:none}
+@keyframes dialog-shade-in{from{opacity:0}to{opacity:1}}
+@keyframes dialog-shade-out{from{opacity:1}to{opacity:0}}
+@keyframes dialog-arrive{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dialog-depart{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(8px) scale(.99)}}
+.phone-shell :is(.button,.quest-row,.routine-card,.reward-card,.explore-tile,.bottom-nav button,.icon-button){transition:transform 130ms ease-out,background-color 160ms ease-out,box-shadow 160ms ease-out}
+.phone-shell :is(.button,.quest-row,.routine-card,.reward-card,.explore-tile,.bottom-nav button,.icon-button):not(:disabled):active{transform:scale(.98)}
+@media(prefers-reduced-motion:reduce){
+ .phone-shell>.role-screen,.phone-shell>.login-screen,.phone-shell .modal-backdrop:not(.loot-backdrop),.phone-shell .modal-backdrop:not(.loot-backdrop)>.modal{animation:none!important}
+ .phone-shell :is(.button,.quest-row,.routine-card,.reward-card,.explore-tile,.bottom-nav button,.icon-button){transition:none!important}
+ .phone-shell :is(.button,.quest-row,.routine-card,.reward-card,.explore-tile,.bottom-nav button,.icon-button):active{transform:none!important}
+}
+
+.phone-shell .loot-card{animation:dialog-arrive 220ms cubic-bezier(.2,.75,.25,1) both}
+.phone-shell .loot-backdrop.is-exiting>.loot-card{animation:dialog-depart 140ms ease-in both}
+.league-report{animation:screen-arrive 200ms ease-out both}
+@media(prefers-reduced-motion:reduce){.phone-shell .loot-card,.phone-shell .loot-backdrop.is-exiting>.loot-card,.league-report{animation:none!important}}

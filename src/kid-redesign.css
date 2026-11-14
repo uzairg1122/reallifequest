@@ -1,0 +1,170 @@
+/* The child routes share the sunrise palette and illustrated cards. */
+.reference-ui.kid-mode:is(.view-home,.view-quests,.view-vault,.view-profile) {
+  --ink: #142845;
+  --muted: #4c647e;
+}
+.reference-ui.kid-mode:is(.view-home,.view-quests,.view-vault,.view-profile) .content {
+  background: linear-gradient(180deg, #f3f9ff, #fffdf9 62%);
+}
+.reference-ui.kid-mode:is(.view-home,.view-quests,.view-vault,.view-profile) :is(.status-bar,.app-header) {
+  background: #def1fc;
+  color: #142845;
+}
+.reference-ui.kid-mode.view-home .app-header {
+  background: linear-gradient(120deg, #d3edff, #fff0d8);
+}
+.reference-ui.kid-mode.view-home :is(.profile-line h2,.profile-line small,.wallet,.icon-button) {
+  color: #142845;
+}
+.reference-ui.kid-mode:is(.view-home,.view-quests,.view-vault,.view-profile) .bottom-nav {
+  margin: 4px 9px 7px;
+  width: auto;
+  border-radius: 25px;
+  border: 1px solid #dae6ee;
+  background: white;
+}
+.reference-ui.kid-mode:is(.view-home,.view-quests,.view-vault,.view-profile) .bottom-nav button.active {
+  color: #132f59;
+  background: #e0eaff;
+  border-radius: 19px;
+}
+
+.kid-adventure-banner,
+.reference-ui.kid-mode.view-quests .header-feature,
+.reference-ui.kid-mode.view-vault .vault-balance,
+.reference-ui.kid-mode.view-profile .profile-hero {
+  background-color: #fff2db;
+  background-image: var(--kid-hero), linear-gradient(120deg, #fff4e5, #e1f0ff);
+  background-size: auto 100%, cover;
+  background-position: right bottom, center;
+  background-repeat: no-repeat;
+  border: 1px solid #e2e7ef;
+  border-radius: 22px;
+  color: #142845;
+}
+.kid-adventure-banner {
+  --kid-hero: url('../assets/kid-redesign/home/sunrise-trail.png');
+  padding: 17px 12px;
+  min-height: 148px;
+}
+.kid-adventure-banner h2 { max-width: 57%; font-size: clamp(20px, 5.6vw, 27px); line-height: 1.08; }
+.kid-adventure-banner p { margin: 7px 0 11px; color: #314969; }
+.kid-adventure-banner .button { width: fit-content; min-height: 44px; padding: 8px 11px; }
+.kid-routine-title { font-size: 21px; }
+.reference-ui.kid-mode.view-home .routine-card {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  min-height: 96px;
+  padding: 9px;
+  border-bottom-width: 1px;
+  background: linear-gradient(135deg, var(--routine-pale, #fff9e7), var(--routine-wash, #ffedbf));
+}
+.reference-ui.kid-mode.view-home .routine-card::after { display: none; }
+.reference-ui.kid-mode.view-home .routine-card > .routine-emoji {
+  width: 39%;
+  height: 58px;
+  border: 0;
+  box-shadow: none;
+  background: var(--kid-routine-art) center / contain no-repeat;
+}
+.routine-card.sun { --kid-routine-art: url('../assets/kid-redesign/home/morning.png'); }
+.routine-card.school { --kid-routine-art: url('../assets/kid-redesign/home/school.png'); }
+.routine-card.tidy { --kid-routine-art: url('../assets/kid-redesign/home/tidy.png'); }
+.routine-card.night { --kid-routine-art: url('../assets/kid-redesign/home/bedtime.png'); }
+
+.reference-ui.kid-mode.view-quests .header-feature {
+  --kid-hero: url('../assets/kid-redesign/quests/quest-map.png');
+  justify-content: start;
+  padding: 16px 12px;
+  min-height: 94px;
+}
+.reference-ui.kid-mode.view-quests .header-feature > span { display: none; }
+.reference-ui.kid-mode.view-quests .header-feature p { color: #314969; }
+.reference-ui.kid-mode.view-quests .pills { flex-wrap: wrap; }
+.reference-ui.kid-mode.view-vault .vault-balance {
+  --kid-hero: url('../assets/kid-redesign/rewards/treasure-chest.png');
+  justify-content: start;
+  padding: 12px;
+  min-height: 100px;
+}
+.reference-ui.kid-mode.view-vault .vault-balance > span {
+  font-size: 0;
+  width: 45px;
+  height: 45px;
+  background: url('../assets/kid-redesign/rewards/coins.png') center / contain no-repeat;
+}
+.reference-ui.kid-mode.view-vault .vault-balance :is(strong,small) { color: #142845; }
+.reference-ui.kid-mode.view-vault .vault-balance > svg { display: none; }
+.reference-ui.kid-mode.view-vault .wallet-empty > span {
+  font-size: 0;
+  display: block;
+  width: 74px;
+  height: 74px;
+  margin-inline: auto;
+  background: url('../assets/kid-redesign/rewards/gift.png') center / contain no-repeat;
+}
+
+.reference-ui.kid-mode.view-profile .profile-hero {
+  --kid-hero: url('../assets/kid-redesign/profile/explorer.png');
+  background-size: auto 78%, cover;
+  background-position: right bottom, center;
+  text-align: left;
+  align-items: start;
+  padding: 16px;
+}
+.reference-ui.kid-mode.view-profile .profile-hero .profile-star { display: none; }
+.reference-ui.kid-mode.view-profile .profile-hero :is(h2,.hero-level,.next-level) { color: #142845; }
+.reference-ui.kid-mode.view-profile .profile-hero .xp { width: 54%; margin-left: 0; }
+.reference-ui.kid-mode.view-profile .profile-hero .leo-avatar {
+  background: url('../assets/kid-redesign/profile/avatar.png') center / cover no-repeat;
+}
+.reference-ui.kid-mode.view-profile .profile-stats img {
+  grid-row: span 2;
+  width: 100%;
+  max-width: 48px;
+  height: 45px;
+  object-fit: contain;
+}
+.reference-ui.kid-mode.view-quests .header-feature h2 { color: #142845; }
+.reference-ui.kid-mode.view-quests .header-feature > div {
+  max-width: 62%;
+  padding: 5px 8px;
+  border-radius: 12px;
+  background: #fff8ebed;
+}
+.reference-ui.kid-mode.view-quests .pills button:nth-child(2) { --quest-tab-art: url('../assets/kid-redesign/quests/checklist.png'); }
+.reference-ui.kid-mode.view-quests .pills button:nth-child(3) { --quest-tab-art: url('../assets/kid-redesign/quests/review.png'); }
+.reference-ui.kid-mode.view-quests .pills button:nth-child(4) { --quest-tab-art: url('../assets/kid-redesign/quests/completed.png'); }
+.reference-ui.kid-mode.view-quests .pills button:not(:first-child)::before {
+  content: '';
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-inline-end: 3px;
+  vertical-align: middle;
+  background: var(--quest-tab-art) center / contain no-repeat;
+}
+.reference-ui.kid-mode.view-vault .vault-balance > div { background: #fff7e9ed; box-shadow: none; }
+.reference-ui.kid-mode.view-vault .empty-tip-card .tip-star {
+  font-size: 0;
+  min-width: 32px;
+  min-height: 32px;
+  background: url('../assets/kid-redesign/rewards/trophy.png') center / contain no-repeat;
+}
+.reference-ui.kid-mode.view-profile .hero-level {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 10px;
+  background: #fff7e9ed;
+}
+.reference-ui.kid-mode.view-profile .hero-level::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background: url('../assets/kid-redesign/profile/level.png') center / contain no-repeat;
+}

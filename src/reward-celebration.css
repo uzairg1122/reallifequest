@@ -1,0 +1,78 @@
+.modal-backdrop.loot-backdrop{z-index:26;background:#203260a6;backdrop-filter:blur(8px);padding:14px;align-items:center}
+.loot-card{position:relative;width:100%;max-width:390px;max-height:100%;overflow-y:auto;overscroll-behavior:contain;border:2px solid #fff;border-radius:30px;background:linear-gradient(160deg,#f4f0ff,#eaf4ff 65%,#fff8df);color:#28386e;box-shadow:0 20px 70px #14285a55;text-align:center;isolation:isolate;scrollbar-width:thin}
+.loot-close{position:absolute;right:12px;top:12px;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:#fff9;color:#6570a0;z-index:2}
+.loot-approved{display:inline-flex;gap:5px;align-items:center;margin:22px 24px 14px 0;padding:5px 10px;border-radius:30px;background:#e1f7ea;color:#29775a;font-size:9px;font-weight:800;letter-spacing:.8px}
+.loot-heading{padding:0 20px 4px}.loot-heading>span{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#8460c3}.loot-heading h1{color:#323f83!important;font-size:30px;line-height:1.12;margin:8px 0}.loot-heading p{font-size:12px;line-height:1.5;color:#68739b;max-width:265px;margin:auto}
+.treasure-scene{position:relative;display:block;width:100%;aspect-ratio:1.5;margin:4px 0 0;padding:0;border:0;background:transparent;overflow:hidden;cursor:pointer;mask-image:linear-gradient(transparent,#000 8%,#000 92%,transparent)}
+.treasure-art{display:block;width:100%;height:100%;object-fit:contain}.loot-open .treasure-art{animation:treasure-reveal .7s cubic-bezier(.2,.8,.3,1) both}
+.loot-sparkles{position:absolute;inset:0;pointer-events:none}.loot-sparkles i{position:absolute;color:#fff7b1;font-size:15px;font-style:normal;text-shadow:0 0 7px #ffca5e;animation:loot-twinkle 2.5s ease-in-out 3}.loot-open .loot-sparkles i{animation:loot-burst 1.1s ease-out both}
+.loot-content{padding:0 20px 22px}.loot-rewards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px}.loot-reward{display:flex;justify-content:center;align-items:center;gap:10px;min-width:0;padding:11px 8px;border-radius:20px;background:#fff3cd;color:#956018;border:1px solid #f5d989;animation:loot-rise .45s both}.loot-reward.violet{background:#ece7ff;border-color:#d4c7ff;color:#7350bb;animation-delay:.12s}.loot-reward>svg{flex-shrink:0;fill:#ffce56;stroke:#bc821a}.loot-reward.violet>svg{fill:#c3a7ff;stroke:#8054cb}.loot-reward strong{display:block;font-size:28px;line-height:1.1;font-weight:900}.loot-reward div>span{display:block;font-size:11px;font-weight:800;margin-top:3px}.reward-message{text-align:left;background:#fff;color:#564185}.reward-message strong{font-size:18px}.reward-message p{font-size:12px;line-height:1.5;margin:5px 0 0}
+.loot-footnote,.loot-unopened{font-size:11px;line-height:1.5;color:#6c7795;margin:12px 0 16px}.loot-footnote{display:flex;justify-content:center;align-items:center;gap:5px}.loot-unopened{max-width:255px;margin:4px auto 16px}.loot-continue{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:48px;border-radius:18px;background:linear-gradient(#a080f4,#7852df);color:#fff;font-weight:900;font-size:14px;box-shadow:0 4px 0 #5939b1,inset 0 1px 0 #c8aeff}.loot-later{font-size:11px;color:#7580a0;padding:8px;margin-top:10px}.loot-card button:focus-visible{outline:3px solid #b17af7;outline-offset:-3px}
+@keyframes treasure-reveal{0%{opacity:.35;transform:scale(.93)}60%{opacity:1;transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes loot-twinkle{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes loot-burst{from{opacity:0;transform:translateY(25px) scale(.3)}50%{opacity:1}to{opacity:0;transform:translateY(-50px) scale(1.5)}}
+@keyframes loot-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.task-icon-options{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;border:0;padding:0;margin:10px 0 18px}.task-icon-options legend{font-size:12px;font-weight:800;margin-bottom:8px}.task-icon-options button{min-height:34px;border:1px solid #dbe4f7;border-radius:9px;font-size:21px;background:#f7faff}.task-icon-options button[aria-pressed=true]{background:#e4dcff;border:2px solid #7c55d1}.task-icon-auto{font-size:11px;color:#6b53a0;text-decoration:underline;padding:5px 0}
+@media(max-width:355px),(max-height:700px){.loot-backdrop{padding:8px}.loot-card{max-width:340px;border-radius:24px}.loot-approved{margin-top:14px;margin-bottom:9px}.loot-heading h1{font-size:25px}.loot-heading p{font-size:11px}.loot-heading>span{font-size:8px}.treasure-scene{max-height:215px}.loot-content{padding:0 15px 17px}.loot-reward{padding:8px}.loot-reward strong{font-size:24px}.loot-footnote,.loot-unopened{font-size:10px;margin-bottom:12px}.loot-continue{min-height:44px;font-size:13px}.loot-later{margin-top:7px;padding:5px}}
+@media(max-width:355px){.task-icon-options{grid-template-columns:repeat(6,1fr)}}
+@media(prefers-reduced-motion:reduce){.loot-card *{animation:none!important;transition:none!important}}
+.loot-card {
+  background: linear-gradient(180deg, #fff4e3, #fffbf2);
+  color: #142845;
+}
+.loot-approved {
+  margin-inline: 0;
+  background: #d8f2bb;
+  color: #20451b;
+}
+.loot-heading h1 { color: #142845 !important; }
+.loot-heading p { color: #435977; }
+.loot-close { background: #fff8eb; color: #142845; }
+.treasure-scene { mask-image: none; }
+.loot-open .treasure-art { object-position: 58% center; }
+.loot-reward { color: #142845; background: #ffedb9; }
+.loot-reward.violet { color: #142845; background: #e9dcff; }
+.loot-continue {
+  border-radius: 26px;
+  background: linear-gradient(#3186f8, #084cc2);
+  box-shadow: 0 4px 0 #103e8d;
+}
+
+.loot-confetti {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  container-type: size;
+}
+.loot-confetti > span {
+  position: absolute;
+  top: -42px;
+  animation: loot-confetti-fall var(--fall-time) var(--fall-delay) linear infinite;
+}
+.loot-paper {
+  width: 8px;
+  height: 5px;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: inset 0 1px 1px #ffffff80;
+}
+.loot-ribbon {
+  width: 12px;
+  height: 34px;
+  background:
+    radial-gradient(ellipse at 85% 25%, transparent 52%, currentColor 55% 72%, transparent 75%) top / 100% 50% no-repeat,
+    radial-gradient(ellipse at 15% 75%, transparent 52%, currentColor 55% 72%, transparent 75%) bottom / 100% 50% no-repeat;
+}
+@keyframes loot-confetti-fall {
+  0% { transform: translateY(0) rotate(-45deg); opacity: 0; }
+  12% { opacity: .9; }
+  52% { transform: translate(var(--drift), 54cqh) rotate(85deg); }
+  88% { opacity: .85; }
+  100% { transform: translateY(calc(100cqh + 48px)) rotate(210deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loot-confetti { display: none; }
+}
