@@ -47,11 +47,11 @@ export default function KidAccountScreen({busy,error,onSubmit,onBack}:{
   <form key={joining?'join':connecting?'connect':'sign-in'} className="login-form" onSubmit={submit}>
    <input type="hidden" name="action" value={joining?'register':'login'}/>
    <label>{translate("Your name")}<input name="displayName" required maxLength={80} autoComplete="given-name" defaultValue={!joining&&!connecting?paired?.name:undefined} placeholder="Enter your name"/></label>
-   {joining&&<label>{translate("Family code")}<input name="code" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} defaultValue={invite} placeholder="6 digits from your parent"/></label>}
+   {joining&&<label>{translate("Family code")}<input name="code" required inputMode="numeric" pattern="[0-9]{6}" onInput={e=>{e.currentTarget.value=e.currentTarget.value.replace(/\D/g,'').slice(0,6);}} defaultValue={invite.replace(/\D/g,'').slice(0,6)} placeholder="6 digits from your parent"/></label>}
    <label>{joining?'Make a PIN':translate("Your PIN")}<input name="pin" type="password" required inputMode="numeric" pattern="[0-9]{4}" minLength={4} maxLength={4} placeholder="4 numbers" autoComplete={joining?'new-password':'current-password'}/></label>
    {joining?<><label>Enter your PIN again<input name="confirmPin" type="password" required inputMode="numeric" pattern="[0-9]{4}" maxLength={4} autoComplete="new-password" onInput={event=>event.currentTarget.setCustomValidity('')}/></label><label>Your age<select name="age" defaultValue="8">{Array.from({length:15},(_,i)=>i+4).map(age=><option key={age} value={age}>{age} years</option>)}</select></label></>:<>
     <input type="hidden" name="pairedChild" value={paired?.id||''}/>
-    {connecting&&<><label>{translate("Phone code")}<input name="deviceCode" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} placeholder="6 digits from your parent"/></label><p className="caption">Ask your parent for a code from Family &amp; account → Connect another phone.</p></>}
+    {connecting&&<><label>{translate("Phone code")}<input name="deviceCode" required inputMode="numeric" pattern="[0-9]{6}" onInput={e=>{e.currentTarget.value=e.currentTarget.value.replace(/\D/g,'').slice(0,6);}} placeholder="6 digits from your parent"/></label><p className="caption">Ask your parent for a code from Family &amp; account → Connect another phone.</p></>}
    </>}
    {showError&&error&&<p className="form-error" role="alert">{error}</p>}
    {!joining&&!connecting&&!paired&&<p className="caption">Connect this phone once to sign in with your name and PIN.</p>}

@@ -4,14 +4,14 @@ import {sessionToken,sessionUser,persistCredentials,clearCredentials,pairedChild
 export {pairedChild};
 import type {PhotoMode} from './proof';
 export type ApiUser = { id:string; displayName:string; role:'parent'|'child'; age?:number|null };
-export type FamilyPlan = {active:boolean;trialEndsAt:string|null;trialBlocked?:boolean;paid:boolean;canPurchase:boolean;accountId:string};
+export type FamilyPlan = {active:boolean;trialEndsAt:string|null;trialStartedAt?:string|null;trialBlocked?:boolean;paid:boolean;canPurchase:boolean;accountId:string};
 const trialBilling=registerPlugin<{trialDevice():Promise<{hash:string}>}>('FamilyBilling');
 let trialDevice:Promise<string>|undefined;
 export type RepeatFrequency = 'daily'|'weekdays'|'weekends'|'weekly';
-export type MissionTemplate = {childId:string;title:string;missionTitle:string;description:string;coins:number;xp:number;difficulty?:'easy'|'medium'|'hard';category?:string;icon?:string;days?:string;photoRequired?:boolean;photoMode?:PhotoMode;dueDate?:string};
+export type MissionTemplate = {childId:string;title:string;missionTitle:string;description:string;coins:number;xp:number;difficulty?:'easy'|'medium'|'hard';category?:string;icon?:string;days?:string;photoRequired?:boolean;photoMode?:PhotoMode;dueDate?:string;deadlineMinutes?:number};
 export type RecurringMission = {id:string;childId:string;title:string;frequency:RepeatFrequency;time:string;timezone:string;nextAt:string};
 export type ApiSession = { user:ApiUser; token:string; familyId?:string;childDeviceToken?:string };
-export type ApiTask = { id:string; family_id:string; created_by:string; assigned_to:string; title:string; mission_title:string; description:string; coins:number; xp:number; difficulty?:'easy'|'medium'|'hard'|null; category?:string;icon?:string;days?:string;photo_required?:number;photo_mode?:PhotoMode;child_name?:string;status:'active'|'submitted'|'approved'|'rejected'; due_date?:string|null };
+export type ApiTask = { id:string; family_id:string; created_by:string; assigned_to:string; title:string; mission_title:string; description:string; coins:number; xp:number; difficulty?:'easy'|'medium'|'hard'|null; category?:string;icon?:string;days?:string;photo_required?:number;photo_mode?:PhotoMode;child_name?:string;status:'active'|'submitted'|'approved'|'rejected'; due_date?:string|null;due_at?:string|null;created_at?:string;assigner_name?:string };
 export type ApiSubmission = ApiTask & {task_id:string;submission_id:string;child_id?:string;child_name:string;note?:string;proof_url?:string;proof_before_url?:string;child_avatar_data?:string|null;parent_feedback?:string;has_proof?:number;has_before_proof?:number};
 export type ApiNotification = { id:string; type:string; title:string; body:string; read_at?:string|null; created_at:string };
 export type ApiMember = { id:string; display_name:string; role:'parent'|'child'|'co_parent'; age?:number;avatar_data?:string|null;coins:number; xp:number; level:number; stars:number };
@@ -20,7 +20,7 @@ export type LeagueEntry = { id:string; display_name:string; avatar_data?:string|
 export type LeagueHistoryItem = { week:string; division:number; divisionName:string; rank:number; movement:'promoted'|'relegated'|'stayed'; xp:number };
 export type LeagueGroup = { childId:string; childName:string; ageBand:'little'|'junior'|'teen'; division:number; divisionName:string; entries:LeagueEntry[]; history:LeagueHistoryItem[]; optedOut?:boolean; optedOutReason?:'parent_opt_out'|'consent_required'|'moderation'|null };
 export type LeagueResponse = { week:string; theme:WeeklyTheme; divisions:Record<string,string>; leagues:LeagueGroup[] };
-export type FamilyParent = { id:string; displayName:string; email:string; role:'parent'|'co_parent'; isPrimary:boolean; joinedAt:string };
+export type FamilyParent = { id:string; displayName:string; email:string; role:'parent'|'co_parent'; isPrimary:boolean; relationship?:string|null; joinedAt:string };
 export type FamilyParentsResponse = { parents:FamilyParent[]; viewerIsPrimary:boolean };
 export type FamilyShare = { familyName:string; totals:{children:number;xp:number;stars:number;coins:number}; topChild:{name:string;xp:number;level:number}|null; referralCode:string; referralUrl:string; referredCount:number; theme:WeeklyTheme };
 export type LeaderboardEntry = { id:string; display_name:string; age?:number|null; avatar_data?:string|null; xp:number; ageBand:'little'|'junior'|'teen'; level?:number; coins?:number; stars?:number };
@@ -71,6 +71,7 @@ async function request<T>(path:string,init:RequestInit={}):Promise<T> {
 export const api={
   billing:()=>request<{plan:FamilyPlan}>('/billing'),
   verifyPurchase:(purchaseToken:string)=>request<{plan:FamilyPlan}>('/billing/verify',{method:'POST',body:JSON.stringify({purchaseToken})}),
+  insights:(range:string,child:string)=>request<{start:string;approved:{day:string;approved:number}[];earned:{day:string;xp:number;coins:number}[]}>('/reports/insights?'+new URLSearchParams({range,child})),
   weeklyReport:(week:'current'|'previous')=>request<{week:string;children:{id:string;display_name:string;xp:number;coins:number;approved:number}[]}>(`/reports/weekly?week=${week}`),
   recurringMissions:()=>request<{rules:RecurringMission[]}>('/recurring-missions'),
   scheduleMission:(input:{childId:string;task:MissionTemplate;frequency:RepeatFrequency;time:string;timezone:string;weekday:number})=>request<{ok:boolean}>('/recurring-missions',{method:'POST',body:JSON.stringify(input)}),
@@ -118,6 +119,7 @@ export const api={
   joinChallenge:(code:string)=>request<{id:string;name:string}>('/challenges/join',{method:'POST',body:JSON.stringify({code})}),
   league:()=>request<LeagueResponse>('/league'),
   coParentCode:()=>request<{code:string;codeDisplay:string;expiresAt:string;inviteUrl:string}>('/families/co-parent-code',{method:'POST',body:'{}'}),
+  setRelationship:(memberId:string,relationship:string)=>request<{ok:boolean}>('/families/relationship',{method:'POST',body:JSON.stringify({memberId,relationship})}),
   familyParents:()=>request<FamilyParentsResponse>('/families/parents'),
   removeCoParent:(coParentId:string)=>request<{ok:boolean}>('/families/remove-coparent',{method:'POST',body:JSON.stringify({coParentId})}),
   familyShare:()=>request<FamilyShare>('/families/share'),

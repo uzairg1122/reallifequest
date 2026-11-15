@@ -27,7 +27,7 @@ function claimFamilyTrial(PDO $pdo, string $familyId, string $deviceHash): bool 
         $claim->execute([$deviceHash,$familyId]);
         $granted = $claim->rowCount() === 1;
         if ($granted) {
-            $pdo->prepare('INSERT INTO family_plans (family_id,trial_ends_at) VALUES (?,DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH))')->execute([$familyId]);
+            $pdo->prepare('INSERT INTO family_plans (family_id,trial_started_at,trial_ends_at) VALUES (?,UTC_TIMESTAMP(),DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH))')->execute([$familyId]);
         }
         $pdo->commit();
         return $granted;
@@ -89,6 +89,7 @@ function publicFamilyPlan(array $plan, array $family, array $user): array {
     return [
         'active' => (bool)($plan['trial_active'] || $plan['paid_active']),
         'trialEndsAt' => $plan['trial_ends_at'] === null ? null : str_replace(' ', 'T', $plan['trial_ends_at']).'Z',
+        'trialStartedAt' => empty($plan['trial_started_at']) ? null : str_replace(' ', 'T', $plan['trial_started_at']).'Z',
         'paid' => (bool)$plan['paid_active'],
         'canPurchase' => $user['id'] === $family['parent_id'],
         'accountId' => hash('sha256', $family['id']),

@@ -34,7 +34,13 @@ function assignDueMissions(PDO $pdo, bool $billingEnabled): int {
             $lock->closeCursor();
             if ($rule) {
                 $template = json_decode($rule['task_json'], true, 512, JSON_THROW_ON_ERROR);
-                insertMission($pdo,$rule['family_id'],$rule['parent_id'],$rule['child_id'],$template['task']);
+                $creator = $rule['parent_id'];
+                if (isset($template['createdBy'])) {
+                    $member = $pdo->prepare("SELECT user_id FROM family_members WHERE family_id=? AND user_id=? AND role IN ('parent','co_parent')");
+                    $member->execute([$rule['family_id'],$template['createdBy']]);
+                    $creator = $member->fetchColumn() ?: $creator;
+                }
+                insertMission($pdo,$rule['family_id'],$creator,$rule['child_id'],$template['task']);
                 notify($pdo,$rule['child_id'],'task_assigned','A new mission awaits',$template['task']['title']);
                 $next = nextMissionTime($rule['frequency'],$rule['timezone'],$template['time'],$template['weekday']);
                 $pdo->prepare('UPDATE recurring_missions SET next_at=? WHERE id=?')->execute([$next,$id]);

@@ -21,7 +21,7 @@ function jsonResponse(array $data, int $status = 200): never {
 
 function fail(string $message, int $status = 400): never { jsonResponse(['error' => $message], $status); }
 set_exception_handler(function (Throwable $error): void {
-    error_log('[Real Life Quest] API request failed: ' . $error->getMessage());
+    error_log('[Super Tasker] API request failed: ' . $error->getMessage());
     if ($error instanceof PDOException && in_array((int)($error->errorInfo[1] ?? 0), [1054, 1146], true)) {
         fail('Your family data is safe. The service needs an update. Please contact support@nomolabs.pro.', 503);
     }
@@ -45,7 +45,7 @@ try {
 } catch (Throwable $e) {
     // Keep credentials and driver details out of the public response; Hostinger
     // error logs still receive the real reason for troubleshooting.
-    error_log('[Real Life Quest] Database connection failed: ' . $e->getMessage());
+    error_log('[Super Tasker] Database connection failed: ' . $e->getMessage());
     fail('Database is not configured yet.', 503);
 }
 
@@ -97,7 +97,7 @@ if ($parts === ['auth','register'] && $method === 'POST') {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 8 || $name === '') fail('Enter a valid email, an 8-character password and a name.');
     $id = uuid(); $pdo->beginTransaction();
     try { $pdo->prepare('INSERT INTO users (id,email,password_hash,display_name,role) VALUES (?,?,?,?,?)')->execute([$id,$email,password_hash($password,PASSWORD_DEFAULT),$name,'parent']); $familyId=uuid(); $pdo->prepare('INSERT INTO families (id,parent_id,name) VALUES (?,?,?)')->execute([$familyId,$id,$name."'s Family"]); $pdo->prepare('INSERT INTO family_members (family_id,user_id,role) VALUES (?,?,?)')->execute([$familyId,$id,'parent']); $pdo->commit(); } catch (Throwable $e) { $pdo->rollBack(); fail('That email may already be registered.',409); }
-    $ref=normalizeCode((string)($input['ref']??'')); if($ref!==''){ try { $rf=$pdo->prepare('SELECT id FROM families WHERE referral_code=? LIMIT 1'); $rf->execute([strtoupper($ref)]); $refFam=$rf->fetchColumn(); if($refFam) $pdo->prepare('INSERT IGNORE INTO referrals (id,referrer_family_id,new_user_id) VALUES (?,?,?)')->execute([uuid(),$refFam,$id]); } catch (Throwable $e) { error_log('[Real Life Quest] referral capture skipped: '.$e->getMessage()); } }
+    $ref=normalizeCode((string)($input['ref']??'')); if($ref!==''){ try { $rf=$pdo->prepare('SELECT id FROM families WHERE referral_code=? LIMIT 1'); $rf->execute([strtoupper($ref)]); $refFam=$rf->fetchColumn(); if($refFam) $pdo->prepare('INSERT IGNORE INTO referrals (id,referrer_family_id,new_user_id) VALUES (?,?,?)')->execute([uuid(),$refFam,$id]); } catch (Throwable $e) { error_log('[Super Tasker] referral capture skipped: '.$e->getMessage()); } }
     jsonResponse(['user'=>['id'=>$id,'displayName'=>$name,'role'=>'parent'],'familyId'=>$familyId,'token'=>issueToken($pdo,$id,$config['token_ttl_days'])],201);
 }
 

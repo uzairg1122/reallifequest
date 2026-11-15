@@ -1,0 +1,28 @@
+.parent-new-stack { display:grid; gap:14px; min-width:0 }
+.parent-screen-banner { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:112px; padding:8px 14px; border-radius:22px; background-size:cover; background-position:center; color:#142c42 }
+.parent-screen-banner h1 { margin:0; font-size:clamp(24px,6vw,32px); line-height:1.12 }
+.parent-screen-banner img { width:clamp(76px,26vw,112px); aspect-ratio:1; object-fit:contain }
+.parent-bars { display:grid; align-items:end; gap:4px; margin-top:14px }
+.parent-bars>div { min-width:0; display:grid; justify-items:center; align-content:end; gap:4px; font-size:clamp(8px,2.3vw,13px); font-variant-numeric:tabular-nums }
+.parent-bars i { width:90%; background:linear-gradient(#a9ddf8,#77c5ef); border-radius:6px 6px 2px 2px }
+.parent-bars small { font-size:inherit }
+.parent-week-strip { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; text-align:center }
+.parent-week-strip>* { display:grid; justify-items:center; gap:4px; border:0; border-radius:10px; padding:7px 1px; color:#17324b; background:#f0f7fc }
+.parent-week-strip .active { background:#cae5ff; color:#0753ab }
+.parent-week-strip small { font-size:10px }
+.parent-task-links { display:flex; flex-wrap:wrap; gap:8px }
+.parent-task-links>* { flex:1 1 130px }
+.parent-task-row,.parent-member-row { display:flex; align-items:center; gap:10px }
+.parent-task-row img,.parent-task-row>span { width:48px; height:48px; object-fit:contain; flex:none }
+.parent-task-row div { flex:1; min-width:0; overflow-wrap:anywhere }
+.parent-task-row small,.parent-member-row small { display:block; color:#496278 }
+.parent-task-row b { font-size:11px; padding:5px 8px; border-radius:20px; background:#e4f2ff; color:#13488a }
+.parent-task-row [data-status="Approved"] { background:#dff5e8; color:#17623d }
+.parent-task-row [data-status="Late"] { background:#fff0e0; color:#844919 }
+.parent-member-row { padding:10px 0; border-bottom:1px solid #e4eff5 }
+.parent-member-row>span { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:#d6ecf6; font-weight:800 }
+.parent-deadline { margin:12px 0; border:1px solid #d4e6f0; border-radius:16px; padding:10px; min-width:0 }
+.parent-deadline>div { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px }
+.parent-deadline button { border:1px solid #d4e6f0; background:#f5faff; color:#17324b; border-radius:12px; padding:9px 3px; font:inherit; font-size:12px }
+.parent-deadline button[aria-pressed="true"] { border-color:#70b5fa; background:#d9edff; color:#0753ab }
+.parent-adult-avatar { display:grid; place-items:center; flex:none; width:38px; height:38px; border-radius:12px; background:#d6ecf6; font-weight:800 }

@@ -23,9 +23,20 @@ function taskValues(array $in): array {
     return [$title,$mission,$description,min(100000,max(0,(int)($in['coins']??0))),$xp,$difficulty,$category,$icon,$days,$photoMode==='optional'?0:1,$photoMode];
 }
 function insertMission(PDO $pdo,string $family,string $parent,string $child,array $input): string {
+    $minutes = missionDeadlineMinutes($input);
     $id=uuid();$values=taskValues($input);
     $pdo->prepare('INSERT INTO tasks (id,family_id,created_by,assigned_to,title,mission_title,description,coins,xp,difficulty,category,icon,days,photo_required,photo_mode) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute(array_merge([$id,$family,$parent,$child],$values));
+    if ($minutes !== null) {
+        $pdo->prepare('UPDATE tasks SET due_at=DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? MINUTE) WHERE id=?')->execute([$minutes,$id]);
+    }
     return $id;
+}
+
+function missionDeadlineMinutes(array $input): ?int {
+    $minutes = $input['deadlineMinutes'] ?? null;
+    if ($minutes === null) return null;
+    if (!is_int($minutes) || $minutes < 1 || $minutes > 43200) fail('Choose a deadline between 1 minute and 30 days.',422);
+    return $minutes;
 }
 
 // XP is app-standardized (not parent-set) so leaderboards stay fair across families.

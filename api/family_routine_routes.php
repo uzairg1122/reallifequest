@@ -25,9 +25,10 @@ if (($parts[0] ?? '') === 'recurring-missions') {
         $task = $input['task'] ?? null;
         if (!is_array($task)) fail('Choose a mission.',422);
         taskValues($task);
+        missionDeadlineMinutes($task);
         $task['days'] = 'Once';
         $next = nextMissionTime($frequency,$timezone,$time,$weekday);
-        $data = json_encode(['task'=>$task,'time'=>$time,'weekday'=>$weekday],JSON_THROW_ON_ERROR);
+        $data = json_encode(['task'=>$task,'time'=>$time,'weekday'=>$weekday,'createdBy'=>$user['id']],JSON_THROW_ON_ERROR);
         $query = $pdo->prepare("INSERT INTO recurring_missions (id,family_id,child_id,task_json,frequency,timezone,next_at)
             SELECT ?,family_id,user_id,?,?,?,? FROM family_members WHERE family_id=? AND user_id=? AND role='child'");
         $query->execute([uuid(),$data,$frequency,$timezone,$next,$family['id'],$child]);
@@ -39,6 +40,31 @@ if (($parts[0] ?? '') === 'recurring-missions') {
         jsonResponse(['ok'=>true]);
     }
     fail('Method not allowed.',405);
+}
+
+if ($parts === ['reports','insights'] && $method === 'GET') {
+    if ($user['role'] !== 'parent') fail('Only parents can view family insights.',403);
+    $range = $_GET['range'] ?? 'weekly';
+    $child = (string)($_GET['child'] ?? '');
+    $today = new DateTimeImmutable('today',new DateTimeZone('UTC'));
+    $start = match ($range) {
+        'weekly' => $today->modify('monday this week'),
+        'monthly' => $today->modify('first day of this month'),
+        'yearly' => $today->setDate((int)$today->format('Y'),1,1),
+        default => fail('Choose a valid report period.',422),
+    };
+    $end = $today->modify('+1 day')->format('Y-m-d');
+    $dates = [$family['id'],$start->format('Y-m-d'),$end,$child,$child];
+    $approved = $pdo->prepare("SELECT DATE(s.reviewed_at) day,COUNT(*) approved
+        FROM submissions s JOIN tasks t ON t.id=s.task_id
+        WHERE t.family_id=? AND s.reviewed_at>=? AND s.reviewed_at<? AND s.status='approved'
+        AND (?='' OR s.child_id=?) GROUP BY DATE(s.reviewed_at)");
+    $approved->execute($dates);
+    $earned = $pdo->prepare("SELECT yyyymmdd day,SUM(xp) xp,SUM(coins) coins FROM xp_events
+        WHERE family_id=? AND yyyymmdd>=? AND yyyymmdd<? AND source='task_approval'
+        AND (?='' OR child_id=?) GROUP BY yyyymmdd");
+    $earned->execute($dates);
+    jsonResponse(['start'=>$start->format('Y-m-d'),'approved'=>$approved->fetchAll(),'earned'=>$earned->fetchAll()]);
 }
 
 if ($parts === ['reports','weekly'] && $method === 'GET') {

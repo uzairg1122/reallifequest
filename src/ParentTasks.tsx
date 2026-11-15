@@ -17,6 +17,7 @@ export default function ParentTasks({members,onAssigned}:{members:ApiMember[];on
  const [customTitle,setCustomTitle]=useState(''),[customIcon,setCustomIcon]=useState('');
  const recipient=children.some(c=>c.id===childId)?childId:children[0]?.id||'';
  const [assigned,setAssigned]=useState<ApiTask[]>([]),[listError,setListError]=useState('');
+ const [deadline,setDeadline]=useState('none');
  const [repeat,setRepeat]=useState<'once'|RepeatFrequency>('once');
  const [rules,setRules]=useState<RecurringMission[]>([]);
  const refreshRules=()=>api.recurringMissions().then(result=>setRules(result.rules||[]));
@@ -38,7 +39,10 @@ export default function ParentTasks({members,onAssigned}:{members:ApiMember[];on
   if(!tasks.length)return;
   setBusy(true);setMessage('');let count=0;
   try {
-   for(const task of tasks){const mission={childId:recipient,...task,missionTitle:task.title};
+   for(const task of tasks){const customMinutes=Number(form.get('deadlineAmount'))*Number(form.get('deadlineUnit'));
+    const deadlineMinutes=deadline==='none'?undefined:deadline==='custom'?customMinutes:Number(deadline);
+    if(deadlineMinutes!==undefined&&(!Number.isInteger(deadlineMinutes)||deadlineMinutes<1||deadlineMinutes>43200))throw new Error('Choose a deadline between 1 minute and 30 days.');
+    const mission={childId:recipient,...task,missionTitle:task.title,deadlineMinutes};
     if(repeat==='once')await api.assignTask(mission);
     else await api.scheduleMission({childId:recipient,task:mission,frequency:repeat,time:String(form.get('repeatTime')),weekday:Number(form.get('repeatDay')),timezone:Intl.DateTimeFormat().resolvedOptions().timeZone});count++;if('id' in task)setSelected(ids=>ids.filter(id=>id!==task.id));}
    if(repeat!=='once'){await refreshRules();setMessage(count+' recurring mission schedule(s) saved.');return;}
@@ -51,6 +55,10 @@ export default function ParentTasks({members,onAssigned}:{members:ApiMember[];on
  <div className="pills"><button type="button" disabled={busy} className={!custom?'active':''} onClick={()=>{setCustom(false);setMessage('')}}>Task presets</button><button type="button" disabled={busy} className={custom?'active':''} onClick={()=>{setCustom(true);setMessage('')}}>Custom task</button></div>
  {custom?<><label>Task name<input name="title" required maxLength={70} value={customTitle} onChange={e=>setCustomTitle(e.target.value)}/></label><fieldset className="task-icon-options"><legend>Task icon · {customIcon||taskIcon(customTitle)}</legend>{TASK_ICONS.map(icon=><button type="button" key={icon} aria-label={`Use ${icon} icon`} aria-pressed={(customIcon||taskIcon(customTitle))===icon} onClick={()=>setCustomIcon(icon)}>{icon}</button>)}</fieldset><button type="button" className="task-icon-auto" onClick={()=>setCustomIcon('')}>Choose automatically from task name</button><label>Instructions<textarea name="description" required maxLength={300}/></label><label>Routine<select name="category">{['Morning Routine','School & Homework','Tidy & Order','Bedtime Wind-Down','Bonus','Custom Missions'].map(c=><option key={c}>{c}</option>)}</select></label><label>Coins<input name="coins" type="number" min="1" max="100000" required defaultValue="15"/></label><label>Difficulty (sets XP)<select name="difficulty" value={difficulty} onChange={e=>setDifficulty(e.target.value as typeof difficulty)}><option value="custom">Custom XP</option><option value="easy">Easy · 10 XP</option><option value="medium">Medium · 25 XP</option><option value="hard">Hard · 50 XP</option></select></label>{difficulty==='custom'&&<label>XP<input name="xp" type="number" min="1" max="500" required defaultValue="20"/></label>}</>:<><label>Find a task<input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search all presets"/></label><ParentPresetCards onCategoryChange={()=>setSearch('')} search={search} selected={selected} busy={busy} onToggle={id=>setSelected(ids=>ids.includes(id)?ids.filter(value=>value!==id):[...ids,id])}/></>}
  <PhotoRequirement label={custom?translate("Photo proof"):'Photo proof for selected tasks'} value={proofMode} onChange={setProofMode} disabled={busy}/>
+ <fieldset className="parent-deadline"><legend>Complete within (optional)</legend>
+ <div>{[['none','No deadline'],['20','20 min'],['30','30 min'],['60','1 hour'],['1440','1 day'],['custom','Custom']].map(([value,label])=><button type="button" key={value} aria-pressed={value===deadline} disabled={busy} onClick={()=>setDeadline(value)}>{label}</button>)}</div>
+ {deadline==='custom'&&<><label>Duration<input type="number" name="deadlineAmount" min="1" max="43200" required/></label><label>Unit<select name="deadlineUnit"><option value="1">Minutes</option><option value="60">Hours</option><option value="1440">Days</option></select></label></>}
+ {deadline!=='none'&&<small>Time starts when the mission is assigned.</small>}</fieldset>
  <label>Assignment schedule<select value={repeat} onChange={e=>setRepeat(e.target.value as typeof repeat)} disabled={busy}>
   <option value="once">Assign now</option><option value="daily">Every day</option><option value="weekdays">Weekdays</option>
   <option value="weekends">Weekends</option><option value="weekly">Every week</option>

@@ -36,3 +36,14 @@
 }
 .kid-account-screen .login-form { margin-top: 12px; }
 .kid-connect-toggle { display: block; margin: 10px auto 0; }
+.parent-invite-code { display:block; width:100%; margin:14px 0; }
+.parent-invite-code-field { position:relative; display:block; margin-top:8px; border-radius:14px; }
+.parent-invite-code-boxes { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(4px,2vw,9px); pointer-events:none; }
+.parent-invite-code-boxes > span { display:grid; place-items:center; min-height:48px; background:#fff; border:1px solid #a8caeb; border-radius:10px; font-size:22px; font-weight:800; color:#132e52; }
+.parent-invite-code-field:focus-within .parent-invite-code-boxes > span { border-color:#087bdf; }
+.parent-invite-code-field input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:text; }
+.parent-sign-in-actions { display:grid; justify-items:stretch; gap:16px; width:100%; margin-top:12px; }
+.parent-sign-in-step { width:100%; animation:parent-step-enter 220ms ease-out both; }
+.parent-sign-in-step > .eyebrow { color:#40678c; font-weight:800; letter-spacing:.1em; }
+@keyframes parent-step-enter { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+@media (prefers-reduced-motion:reduce) { .parent-sign-in-step { animation:none } }

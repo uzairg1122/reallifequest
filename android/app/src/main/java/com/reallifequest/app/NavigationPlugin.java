@@ -25,6 +25,24 @@ import java.nio.charset.StandardCharsets;
 public class NavigationPlugin extends Plugin {
  private static final String PROGRESS_FILE = "real-life-quest-progress.png";
 
+ @PluginMethod public void shareText(PluginCall call) {
+  String text = call.getString("text", "");
+  if (text.trim().isEmpty()) {
+   call.reject("Share text is required.");
+   return;
+  }
+  Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain")
+      .putExtra(Intent.EXTRA_TEXT, text);
+  getActivity().runOnUiThread(() -> {
+   try {
+    getActivity().startActivity(Intent.createChooser(intent, null));
+    call.resolve();
+   } catch (RuntimeException error) {
+    call.reject("Could not open Android sharing.");
+   }
+  });
+ }
+
  private byte[] progressPng(PluginCall call) throws IOException {
   String encoded = call.getString("data", "");
   if (encoded.length() > 8_000_000) throw new IOException("Image is too large");
@@ -52,7 +70,7 @@ public class NavigationPlugin extends Plugin {
    Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", file);
    Intent intent = new Intent(Intent.ACTION_SEND).setType("image/png")
        .putExtra(Intent.EXTRA_STREAM, uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-   intent.setClipData(ClipData.newRawUri("Real Life Quest", uri));
+   intent.setClipData(ClipData.newRawUri("Super Tasker", uri));
    getActivity().runOnUiThread(() -> {
     try {
      getActivity().startActivity(Intent.createChooser(intent, null));
@@ -80,7 +98,7 @@ public class NavigationPlugin extends Plugin {
    ContentValues values = new ContentValues();
    values.put(MediaStore.Images.Media.DISPLAY_NAME, PROGRESS_FILE);
    values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-   values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Real Life Quest");
+   values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Super Tasker");
    values.put(MediaStore.Images.Media.IS_PENDING, 1);
    uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
    if (uri == null) throw new IOException("Gallery unavailable");

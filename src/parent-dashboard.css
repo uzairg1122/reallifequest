@@ -287,8 +287,13 @@
 }
 .invite-modal-heading { display: flex; align-items: center; gap: 8px; padding-right: 38px; min-height: 44px; }
 .invite-modal-heading .parent-art { width: 36px; height: 36px; flex: 0 0 36px; }
-.parent-invite-modal .invite-modal-heading h2 { color: var(--parent-ink); margin: 0; font-size: 20px; }
-.parent-invite-modal > p { margin: 4px 0 10px; color: var(--parent-muted); }
+.modal.parent-invite-modal {
+ background: linear-gradient(155deg, #fffdf8, #fff7e9);
+ color: #0c315a;
+ padding: 20px 18px max(14px, env(safe-area-inset-bottom));
+}
+.parent-invite-modal .invite-modal-heading { margin-bottom: 14px; gap: 10px; }
+.parent-invite-modal .invite-modal-heading h2 { color: #0c315a; margin: 0; font-size: clamp(19px, 5.5vw, 23px); }
 .parent-invite-modal .invite-child-fields {
  display: grid;
  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
@@ -299,18 +304,52 @@
 .parent-invite-modal .invite-child-fields > label { margin-bottom: 9px; }
 .parent-invite-modal .photo-requirement small { font-size: 10px; line-height: 1.35; }
 .parent-invite-modal input:not([type="checkbox"]),
-.parent-invite-modal select { max-width: 100%; min-height: 44px; }
+.parent-invite-modal select {
+ max-width: 100%;
+ min-height: 44px;
+ background: #e6f2ff;
+ border-color: #bad6f3;
+}
+.invite-missions-heading {
+ display: flex;
+ align-items: baseline;
+ justify-content: space-between;
+ flex-wrap: wrap;
+ gap: 4px 10px;
+ margin-top: 12px;
+}
+.invite-missions-heading h3 { margin: 0; font-size: 17px; }
+.invite-missions-heading span { color: #47688b; font-size: 12px; font-weight: 800; }
+.parent-invite-modal .invite-missions-help { margin: 3px 0 8px; }
 .parent-invite-modal .invite-task-list {
- max-height: min(176px, 26dvh);
- margin: 6px 0 10px;
- padding: 7px 10px;
- background: #f4faf7;
- border-color: #d9ebe3;
+ max-height: min(190px, 29dvh);
+ margin: 0 0 10px;
+ padding: 0 10px;
+ background: #fffdf8;
+ border-color: #e4ded3;
  overscroll-behavior: contain;
 }
-.parent-invite-modal .invite-task-list .checkbox-label { min-height: 42px; padding-block: 5px; font-size: 12px; }
-.parent-invite-modal .button { min-height: 44px; white-space: normal; }
-.parent-invite-modal .pairing-code { color: var(--parent-ink); }
+.parent-invite-modal .invite-task-list .checkbox-label {
+ min-height: 44px;
+ padding-block: 6px;
+ font-size: 13px;
+ cursor: pointer;
+}
+.parent-invite-modal .invite-task-list .checkbox-label:first-child { border-top: 0; }
+.parent-invite-modal .invite-task-list .checkbox-label input { accent-color: #0879ef; }
+.invite-submit {
+ position: sticky;
+ bottom: 0;
+ z-index: 1;
+ padding-block: 6px 1px;
+ background: #fff7e9;
+}
+.invite-submit .button {
+ min-height: 48px;
+ border-radius: 15px;
+ background: #075bd7;
+ white-space: normal;
+}
 
 .parent-settings { display: grid; gap: 12px; max-width: 620px; margin-inline: auto; }
 .parent-settings-hero {

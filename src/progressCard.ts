@@ -52,7 +52,7 @@ export async function makeProgressCard(data: FamilyShare, translate: (text: stri
 
   ctx.textAlign = 'center';
   panel(344, 79, 392, 64, 32, '#ffffffd9');
-  text('REAL LIFE QUEST', 540, 121, 30, '#214958');
+  text('SUPER TASKER', 540, 121, 30, '#214958');
   ctx.drawImage(badge, 416, 150, 248, 248);
   text(translate('Family progress'), 540, 452, 76);
   text(data.theme.title, 540, 524, 40, '#40616c');
@@ -98,13 +98,13 @@ export async function shareProgressCard(blob: Blob) {
   if (!navigator.canShare?.({files: [file]})) {
     throw new Error('Image sharing is unavailable here. Use Save image to download the card.');
   }
-  await navigator.share({files: [file], title: 'Real Life Quest'});
+  await navigator.share({files: [file], title: 'Super Tasker'});
 }
 
 export async function saveProgressCard(blob: Blob) {
   if (Capacitor.getPlatform() === 'android') {
     const {saved, gallery} = await native.saveImage({data: await readData(blob)});
-    return saved ? gallery ? 'Saved to Pictures / Real Life Quest.' : 'Image saved.' : '';
+    return saved ? gallery ? 'Saved to Pictures / Super Tasker.' : 'Image saved.' : '';
   }
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

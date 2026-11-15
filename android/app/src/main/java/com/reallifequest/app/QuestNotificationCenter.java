@@ -69,7 +69,7 @@ final class QuestNotificationCenter {
   if(user.isEmpty()||!user.equals(owner(c))||!session.equals(p.getString("session",""))||!enabled(c)||!id.matches("[a-f0-9-]{36}"))return false;
   // Durable dedupe also covers FCM retries after process death.
   String seen=p.getString("seen","");if((","+seen+",").contains(","+id+","))return true;
-  JSObject event=new JSObject();event.put("id",id);event.put("type",data.getOrDefault("type",""));event.put("title",data.getOrDefault("title","Family update"));event.put("body",data.getOrDefault("body","Open Real Life Quest for your update."));
+  JSObject event=new JSObject();event.put("id",id);event.put("type",data.getOrDefault("type",""));event.put("title",data.getOrDefault("title","Family update"));event.put("body",data.getOrDefault("body","Open Super Tasker for your update."));
   boolean allowed=NotificationManagerCompat.from(c).areNotificationsEnabled();
   if(Build.VERSION.SDK_INT>=33&&ContextCompat.checkSelfPermission(c,Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)allowed=false;
   String channelId=channel(c);

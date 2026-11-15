@@ -24,3 +24,83 @@
   padding: .75rem 0;
   border-bottom: 1px solid #dce8f2;
 }
+
+.family-plan-screen {
+  flex: 1;
+  overflow: auto;
+  background: #f1f8fc;
+  color: #112d46;
+}
+.family-plan-toolbar {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 44px;
+}
+.family-plan-hero {
+  min-height: 132px;
+  padding: 1rem;
+  border-radius: 20px;
+  background-color: #dceef9;
+  background-position: center;
+  background-size: cover;
+}
+.family-plan-hero .parent-art { float: right; width: 42px; height: 42px; margin-left: .5rem; }
+.family-plan-hero h1 { font-size: clamp(1.35rem, 5.5vw, 1.8rem); margin: 0 0 .35rem; }
+.family-plan-hero p, .family-trial-summary p { margin: 0; }
+.family-trial-summary { background: #fff8ed; }
+.family-trial-summary h2 { margin: 0 0 .4rem; }
+.family-plan-benefits { display: grid; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.family-plan-benefits li {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .65rem .8rem;
+  background: #e7f1f5;
+  border-radius: 12px;
+}
+.family-plan-benefits img { width: 28px; height: 28px; flex: none; object-fit: contain; }
+.family-trial-actions { display: grid; gap: .55rem; }
+.family-trial-actions p { margin: 0; text-align: center; }
+.family-trial-actions .button, .family-plan-options .button { min-height: 46px; white-space: normal; }
+.family-plan-options { display: grid; gap: .6rem; border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+.family-plan-options p { margin: .15rem 0; }
+.family-plan-option {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin: 0;
+  border: 1px solid #c6d9e8;
+  border-radius: 14px;
+  padding: .7rem;
+  background: #fffaf1;
+  cursor: pointer;
+}
+.family-plan-option:has(input:checked) { background: #e6f3ff; border-color: #176bd4; }
+.family-plan-option input[type="radio"] { flex: none; width: 18px; min-height: 18px; margin: 0; accent-color: #176bd4; }
+.family-plan-option span { display: grid; gap: .2rem; min-width: 0; overflow-wrap: anywhere; }
+.family-plan-entry { margin-block: .4rem; }
+.family-trial-banner {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .65rem;
+  width: 100%;
+  padding: .7rem .8rem;
+  color: #112d46;
+  background: #fff7e9;
+  border: 1px solid #ebd5af;
+  border-radius: 16px;
+  text-align: start;
+}
+.family-trial-banner .parent-art { width: 42px; height: 42px; object-fit: contain; }
+.family-trial-banner strong { display: block; margin-bottom: .2rem; }
+.family-trial-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .15rem .85rem;
+  color: #36556d;
+  font-size: .8rem;
+}
+.family-trial-dates time { font-weight: 800; }
+.family-trial-summary .family-trial-dates { margin-bottom: .55rem; }

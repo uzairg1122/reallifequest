@@ -94,13 +94,13 @@ function serviceAccountAccessToken(array $settings, string $scope):string {
 // Only generic text crosses FCM. Names, mission text, photos, PINs and bearer tokens stay on Hostinger.
 function pushText(string $type):array {
  return match($type){
-  'task_assigned'=>['A new mission awaits','Open Real Life Quest to see your new task.'],
-  'task_submitted'=>['Mission ready for review','Open Real Life Quest to review your child\'s work.'],
+  'task_assigned'=>['A new mission awaits','Open Super Tasker to see your new task.'],
+  'task_submitted'=>['Mission ready for review','Open Super Tasker to review your child\'s work.'],
   'task_approved'=>['Mission approved!','Your coins and progress are ready.'],
-  'task_rejected'=>['Mission needs another try','Open Real Life Quest for your parent\'s feedback.'],
+  'task_rejected'=>['Mission needs another try','Open Super Tasker for your parent\'s feedback.'],
   'reward_requested'=>['Reward request','Your child has a reward request to review.'],
-  'reward_approved'=>['You earned a reward!','Open Real Life Quest to see your reward.'],
-  default=>['Family update','Open Real Life Quest to see your family update.']
+  'reward_approved'=>['You earned a reward!','Open Super Tasker to see your reward.'],
+  default=>['Family update','Open Super Tasker to see your family update.']
  };
 }
 

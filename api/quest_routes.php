@@ -26,14 +26,14 @@ if ($parts===['profile'] && $method==='PATCH') {
     jsonResponse(['ok'=>true]);
 }
 if ($parts===['tasks'] && $method==='GET') {
-    if($user['role']==='parent'){$stmt=$pdo->prepare('SELECT t.*,u.display_name child_name FROM tasks t JOIN users u ON u.id=t.assigned_to WHERE t.family_id=? ORDER BY t.created_at DESC');$stmt->execute([$family['id']]);}
-    else{$stmt=$pdo->prepare('SELECT * FROM tasks WHERE family_id=? AND assigned_to=? ORDER BY created_at DESC');$stmt->execute([$family['id'],$user['id']]);}
+    if($user['role']==='parent'){$stmt=$pdo->prepare('SELECT t.*,u.display_name child_name,a.display_name assigner_name FROM tasks t JOIN users u ON u.id=t.assigned_to LEFT JOIN users a ON a.id=t.created_by WHERE t.family_id=? ORDER BY t.created_at DESC');$stmt->execute([$family['id']]);}
+    else{$stmt=$pdo->prepare('SELECT t.*,a.display_name assigner_name FROM tasks t LEFT JOIN users a ON a.id=t.created_by WHERE t.family_id=? AND t.assigned_to=? ORDER BY t.created_at DESC');$stmt->execute([$family['id'],$user['id']]);}
     jsonResponse(['tasks'=>$stmt->fetchAll()]);
 }
 if ($parts===['tasks'] && $method==='POST') {
     if($user['role']!=='parent')fail('Only a parent can assign tasks.',403);
     $input=body();$child=(string)($input['childId']??'');$check=$pdo->prepare("SELECT 1 FROM family_members WHERE family_id=? AND user_id=? AND role='child'");$check->execute([$family['id'],$child]);if(!$check->fetch())fail('That child is not in your family.',403);
-    taskValues($input);$pdo->beginTransaction();try{$id=insertMission($pdo,$family['id'],$user['id'],$child,$input);notify($pdo,$child,'task_assigned','A new mission awaits',(string)$input['title']);$pdo->commit();}catch(Throwable $e){$pdo->rollBack();throw $e;}jsonResponse(['id'=>$id],201);
+    taskValues($input);missionDeadlineMinutes($input);$pdo->beginTransaction();try{$id=insertMission($pdo,$family['id'],$user['id'],$child,$input);notify($pdo,$child,'task_assigned','A new mission awaits',(string)$input['title']);$pdo->commit();}catch(Throwable $e){$pdo->rollBack();throw $e;}jsonResponse(['id'=>$id],201);
 }
 if (($parts[0]??'')==='tasks' && count($parts)===3 && $parts[2]==='submit' && $method==='POST') {
     if($user['role']!=='child')fail('Only a child can submit a task.',403);

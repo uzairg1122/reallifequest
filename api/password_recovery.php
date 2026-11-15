@@ -9,7 +9,7 @@ if($parts===['auth','password','request']&&$method==='POST'){
   $pdo->prepare('INSERT INTO password_resets (token_hash,user_id,expires_at) VALUES (?,?,DATE_ADD(UTC_TIMESTAMP(),INTERVAL 15 MINUTE))')->execute([hash('sha256',$token),$id]);
   $url=publicAppOrigin().'/reset-password.html#token='.rawurlencode($token);
   $from=(string)($config['mail_from']??'');
-  if(!filter_var($from,FILTER_VALIDATE_EMAIL)||!mail($email,'Reset your Real Life Quest password',"Use this link within 15 minutes to reset your password:\n".$url."\nIf you did not request this, ignore this email.","From: ".$from."\r\nContent-Type: text/plain; charset=UTF-8"))error_log('[RLQ] Password reset email could not be sent; check mail configuration.');
+  if(!filter_var($from,FILTER_VALIDATE_EMAIL)||!mail($email,'Reset your Super Tasker password',"Use this link within 15 minutes to reset your password:\n".$url."\nIf you did not request this, ignore this email.","From: ".$from."\r\nContent-Type: text/plain; charset=UTF-8"))error_log('[RLQ] Password reset email could not be sent; check mail configuration.');
  }
  jsonResponse(['ok'=>true,'message'=>'If a parent account uses that email, a reset link will arrive shortly.']);
 }
